@@ -486,8 +486,8 @@
             <path d="M6 16c4-4 8-4 12 0s8 4 12 0 8-4 12 0"/>
           </svg>
         </div>
-        <div class="area-card__name"><em>Ansiedade</em> e crises de ansiedade</div>
-        <div class="area-card__desc">Preocupação excessiva, crises, sintomas físicos e impacto na rotina.</div>
+        <div class="area-card__name">Ansiedade e <em>crise de pânico</em></div>
+        <div class="area-card__desc">Preocupação excessiva, crises de pânico, sintomas físicos e impacto na rotina.</div>
       </li>
       <li class="area-card">
         <div class="area-card__num">05</div>
@@ -499,8 +499,8 @@
             <path d="M20 20l4 4 4-4"/>
           </svg>
         </div>
-        <div class="area-card__name"><em>Depressão</em> e transtornos de humor</div>
-        <div class="area-card__desc">Tristeza persistente, perda de interesse, alterações de energia e sono.</div>
+        <div class="area-card__name"><em>Transtornos de humor</em>: depressão, distimia e bipolaridade</div>
+        <div class="area-card__desc">Oscilações persistentes ou intensas de humor e energia que impactam a vida cotidiana.</div>
       </li>
       <li class="area-card">
         <div class="area-card__num">06</div>
@@ -513,8 +513,8 @@
             <path d="M22 14l4-4 4 4"/>
           </svg>
         </div>
-        <div class="area-card__name">Fobia social e <em>timidez patológica</em></div>
-        <div class="area-card__desc">Desconforto intenso em situações sociais e evitação.</div>
+        <div class="area-card__name">Fobia social e <em>transtornos de personalidade</em></div>
+        <div class="area-card__desc">Desconforto intenso em situações sociais e padrões persistentes de relação que dificultam vínculos.</div>
       </li>
       <li class="area-card">
         <div class="area-card__num">07</div>
@@ -990,7 +990,7 @@
             <div class="footer__brand-tag">Psiquiatria · Sa&uacute;de mental</div>
           </div>
         </div>
-        <p class="footer__desc">— Cuidado em saúde mental com técnica, escuta qualificada e acolhimento genuíno. Um espaço clínico para quem busca seriedade e humanidade.</p>
+        <p class="footer__desc">— Cuidado em saúde mental com técnica, escuta qualificada e acolhimento genuíno. Um espaço clínico para quem busca seriedade e humanidade. Um cuidado que transcende o diagnóstico, centrado no indivíduo e não na doença ou na manifestação dos sintomas.</p>
       </div>
 
       <div class="footer__col">
@@ -1265,10 +1265,17 @@
   // Engagement: meaningful time-on-page (30s)
   setTimeout(() => track('engaged_30s'), 30000);
 
-  // Pre-form modal — gentle qualifying step before WhatsApp
+  // ============================================================
+  // Pre-form modal — every WhatsApp click goes through this:
+  //   click → modal → POST to Google Sheets → redirect to WhatsApp
+  // Replace SHEETS_WEBHOOK_URL with your Apps Script Web App URL
+  // (see SHEETS-SETUP.md for step-by-step setup).
+  // ============================================================
   (() => {
     const modal = document.getElementById('preformModal');
     if (!modal) return;
+    const SHEETS_WEBHOOK_URL = 'SHEETS_WEBHOOK_URL_PLACEHOLDER';
+
     const skipKey = 'preform_skip_until';
     const isSkipped = () => {
       const until = parseInt(localStorage.getItem(skipKey) || '0', 10);
@@ -1282,17 +1289,15 @@
       modal.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       track('preform_open', { from: href });
-      // move focus into the modal for keyboard users
       setTimeout(() => modal.querySelector('[name="preformName"]')?.focus(), 50);
     };
     const close = () => {
       modal.classList.remove('is-open');
       document.body.style.overflow = '';
-      // return focus to the originating link
       if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
       lastTrigger = null;
     };
-    // Esc to close + simple focus trap on Tab
+    // ESC + focus trap
     document.addEventListener('keydown', (e) => {
       if (!modal.classList.contains('is-open')) return;
       if (e.key === 'Escape') { e.preventDefault(); close(); return; }
@@ -1304,18 +1309,50 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
-    const send = (msg) => {
+    // Persist lead to Google Sheets (fire-and-forget; survives navigation).
+    // No-op if SHEETS_WEBHOOK_URL is still the placeholder.
+    const persistToSheet = (data) => {
+      if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL === 'SHEETS_WEBHOOK_URL_PLACEHOLDER') return false;
+      try {
+        const payload = new URLSearchParams({
+          timestamp: new Date().toISOString(),
+          name: data.name || '',
+          reason: data.reason || '',
+          note: data.note || '',
+          source_url: location.href,
+          referrer: document.referrer || '',
+          target: data.target || '',
+          submission_type: data.submission_type || 'form'
+        });
+        const blob = new Blob([payload.toString()], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+        if (navigator.sendBeacon) {
+          return navigator.sendBeacon(SHEETS_WEBHOOK_URL, blob);
+        }
+        // Fallback: fetch with keepalive
+        fetch(SHEETS_WEBHOOK_URL, {
+          method: 'POST',
+          body: payload,
+          mode: 'no-cors',
+          keepalive: true,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
+        }).catch(() => {});
+        return true;
+      } catch (e) { return false; }
+    };
+    // Send: persist + redirect
+    const send = (msg, data) => {
       const base = pendingHref || 'https://wa.me/5531971546161';
       const sep = base.includes('?') ? '&' : '?';
       const url = msg ? `${base}${sep}text=${encodeURIComponent(msg)}` : base;
-      track('preform_submit', { message_length: (msg || '').length });
-      window.open(url, '_blank', 'noopener');
-      close();
+      const persisted = persistToSheet({ ...(data || {}), target: base });
+      track('preform_submit', { message_length: (msg || '').length, persisted });
+      // Small delay so sendBeacon definitely flushes before navigation in some browsers
+      setTimeout(() => { window.open(url, '_blank', 'noopener'); close(); }, 60);
     };
+    // Intercept ALL wa.me clicks (including the sticky FAB)
     document.querySelectorAll('a[href*="wa.me"]').forEach((a) => {
       a.addEventListener('click', (e) => {
-        if (a.classList.contains('whats-sticky')) return; // sticky always direct
-        if (isSkipped()) return;
+        if (isSkipped()) return; // returning user already filled within last 30d
         e.preventDefault();
         open(a.href, a);
       });
@@ -1323,16 +1360,15 @@
     modal.querySelector('[data-preform-close]').addEventListener('click', close);
     modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
     modal.querySelector('[data-preform-skip]').addEventListener('click', () => {
-      // skip for 30 days
+      // Skip the form for 30 days, but still log the click so the lead is captured
       localStorage.setItem(skipKey, String(Date.now() + 30 * 24 * 60 * 60 * 1000));
-      send('');
+      send('', { submission_type: 'skipped' });
     });
     modal.querySelector('[data-preform-form]').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = modal.querySelector('[name="preformName"]').value.trim();
       const reason = modal.querySelector('[name="preformReason"]:checked')?.value || '';
       const note = modal.querySelector('[name="preformNote"]').value.trim();
-      // Qualified lead — fire dedicated conversion (higher value than raw WA click)
       track('preform_qualified_lead', { has_name: !!name, reason: reason || 'unspecified', note_len: note.length });
       conversion('QUALIFIED_LEAD_LABEL');
       const lines = [
@@ -1341,7 +1377,7 @@
         reason ? `Gostaria de conversar sobre: ${reason}.` : '',
         note ? note : '',
       ].filter(Boolean);
-      send(lines.join(' '));
+      send(lines.join(' '), { name, reason, note, submission_type: 'form' });
     });
   })();
 
