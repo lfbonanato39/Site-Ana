@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /.audit/
+Disallow: /.claude/
+Disallow: /uploads/
+Disallow: /screenshots/
+
+Sitemap: https://www.draanalauravaladares.com.br/sitemap.xml

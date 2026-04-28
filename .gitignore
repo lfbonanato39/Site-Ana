@@ -1,0 +1,32 @@
+# =========================================================================
+#  Dra. Ana Laura — repositório do site
+# =========================================================================
+
+# --- Auditoria e ferramentas de desenvolvimento (não fazem parte do site) ---
+.audit/
+.claude/
+
+# --- Duplicatas e artefatos legados (originais do Claude Design) ---
+uploads/
+screenshots/
+debug_footer.png
+debug_footer2.png
+
+# --- Sistema operacional ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# --- Editores / IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Temporários ---
+*.tmp
+*.bak
+*.log
+~$*

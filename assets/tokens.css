@@ -1,0 +1,237 @@
+/* =========================================================================
+   Dra. Ana Laura — Design Tokens
+   Psiquiatria | Saúde Mental
+   Tone: elegant, timeless, composed. Trust + warmth.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Italiana&family=Jost:wght@300;400;500;600&display=swap');
+
+:root {
+  /* -----------------------------------------------------------------------
+     COLOR — from brand palette (brand_page4.jpg)
+     Navy is the authority anchor; champagne/tan is the warmth accent;
+     creams are the background. No blacks, no harsh whites.
+     ----------------------------------------------------------------------- */
+
+  /* Brand core */
+  --navy-900: #1a2342;          /* deepest — reserved for display type */
+  --navy-800: #212e51;          /* primary brand navy (HEX #212E51) */
+  --navy-700: #222e52;          /* secondary navy (HEX #222E52) */
+  --navy-600: #2e3a5e;          /* hover / lighter navy */
+  --navy-500: #4a5678;          /* muted navy */
+
+  --champagne-700: #b8985f;     /* deeper tan for press states */
+  --champagne-600: #c9a870;     /* champagne accent hover */
+  --champagne-500: #d2b589;     /* primary champagne (HEX #D2B589) */
+  --champagne-400: #ddc4a0;     /* soft champagne */
+  --champagne-300: #e8d5b8;     /* faintest champagne */
+
+  /* Neutrals — creams & ivories */
+  --ivory-100: #fbf8f3;         /* lightest — hero bg */
+  --ivory-200: #f5efe4;         /* page bg warm */
+  --cream-300: #ede5da;         /* primary cream (HEX #EDE5DA) */
+  --cream-400: #e8e0d2;         /* card bg */
+  --pearl-300: #ebe5e0;         /* pearl grey (HEX #EBE5E0) */
+  --pearl-400: #d8d0c7;         /* subtle border */
+  --pearl-500: #b8ad9e;         /* muted text on cream */
+
+  /* Foreground */
+  --fg-1: var(--navy-800);      /* primary text */
+  --fg-2: #4a4535;              /* secondary warm brown-grey */
+  --fg-3: #8a8270;              /* tertiary / caption */
+  --fg-inverse: var(--ivory-100);
+
+  /* Background */
+  --bg-1: var(--ivory-200);     /* page */
+  --bg-2: var(--cream-300);     /* card */
+  --bg-3: var(--pearl-300);     /* inset */
+  --bg-dark: var(--navy-800);   /* dark surface */
+
+  /* Borders & dividers — always warm, never pure grey */
+  --border-1: rgba(33, 46, 81, 0.08);
+  --border-2: rgba(33, 46, 81, 0.16);
+  --border-strong: var(--navy-800);
+  --hairline: rgba(74, 69, 53, 0.20);
+
+  /* Semantic accents (kept minimal — brand avoids bright semantic colors) */
+  --accent: var(--champagne-500);
+  --accent-hover: var(--champagne-600);
+  --accent-press: var(--champagne-700);
+
+  /* -----------------------------------------------------------------------
+     TYPE — three-family system
+     Display  : Italiana (deco, the wordmark voice) — sparingly, H1 only
+     Serif    : Cormorant Garamond (classical authority) — titles, editorial
+     Sans     : Jost (geometric, wide tracking uppercase) — UI + eyebrows
+     ----------------------------------------------------------------------- */
+
+  --font-display: 'Italiana', 'Cormorant Garamond', serif;
+  --font-serif: 'Cormorant Garamond', 'Cormorant', Georgia, serif;
+  --font-sans: 'Jost', 'Helvetica Neue', system-ui, sans-serif;
+
+  /* Scale — editorial, generous */
+  --fs-display: clamp(56px, 8vw, 120px);
+  --fs-h1: clamp(40px, 5vw, 72px);
+  --fs-h2: clamp(32px, 3.5vw, 48px);
+  --fs-h3: 28px;
+  --fs-h4: 22px;
+  --fs-body: 17px;
+  --fs-body-sm: 15px;
+  --fs-caption: 13px;
+  --fs-eyebrow: 12px;
+
+  /* Tracking — sans-eyebrows always widely spaced */
+  --ls-eyebrow: 0.28em;
+  --ls-label: 0.14em;
+  --ls-tight: -0.01em;
+
+  /* Line height */
+  --lh-display: 0.95;
+  --lh-heading: 1.1;
+  --lh-body: 1.6;
+
+  /* -----------------------------------------------------------------------
+     SPACING — 4px base
+     ----------------------------------------------------------------------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+  --sp-10: 128px;
+
+  /* -----------------------------------------------------------------------
+     RADII — subtle, never heavy
+     ----------------------------------------------------------------------- */
+  --r-none: 0;
+  --r-sm: 2px;
+  --r-md: 6px;
+  --r-lg: 12px;
+  --r-xl: 20px;
+  --r-pill: 999px;
+
+  /* -----------------------------------------------------------------------
+     SHADOWS — soft, warm, low elevation
+     ----------------------------------------------------------------------- */
+  --shadow-1: 0 1px 2px rgba(33, 46, 81, 0.04), 0 1px 1px rgba(33, 46, 81, 0.03);
+  --shadow-2: 0 4px 16px rgba(33, 46, 81, 0.06), 0 2px 4px rgba(33, 46, 81, 0.04);
+  --shadow-3: 0 12px 40px rgba(33, 46, 81, 0.10), 0 4px 10px rgba(33, 46, 81, 0.05);
+  --shadow-focus: 0 0 0 3px rgba(210, 181, 137, 0.35);
+
+  /* -----------------------------------------------------------------------
+     MOTION — slow, gentle, reassuring
+     ----------------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-med: 320ms;
+  --dur-slow: 600ms;
+
+  /* Max widths */
+  --measure-text: 62ch;
+  --container: 1200px;
+}
+
+/* =========================================================================
+   SEMANTIC STYLES
+   ========================================================================= */
+
+html, body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-1);
+  background: var(--bg-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-tight);
+  color: var(--navy-800);
+  font-weight: 400;
+}
+
+h1, .h1 {
+  font-family: var(--font-serif);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-heading);
+  font-weight: 500;
+  color: var(--navy-800);
+  letter-spacing: -0.005em;
+}
+
+h2, .h2 {
+  font-family: var(--font-serif);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  font-weight: 500;
+  color: var(--navy-800);
+}
+
+h3, .h3 {
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--navy-800);
+}
+
+h4, .h4 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  color: var(--navy-800);
+  letter-spacing: 0.01em;
+}
+
+p, .body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-2);
+  max-width: var(--measure-text);
+  font-weight: 300;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--champagne-700);
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--fg-2);
+}
+
+.caption {
+  font-family: var(--font-serif);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  color: var(--fg-3);
+  font-weight: 400;
+}
+
+.quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 26px;
+  line-height: 1.35;
+  color: var(--navy-800);
+  font-weight: 400;
+}
