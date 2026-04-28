@@ -85,18 +85,36 @@ No GA4: **Admin → Eventos → Marcar como conversão**: `whatsapp_click` e `pr
 > - divulgação de técnica não reconhecida
 > - omissão do CRM e da especialidade
 
-**Estrutura proposta:**
+**Foco estratégico**: orçamento e atenção concentrados em **Saúde da Mulher** e **Insônia** (decisão da Dra. — abr/2026). Demais grupos rodam com budget reduzido para prospecção.
 
 ```
 Conta: Dra. Ana Laura Valadares
 │
-├── Campanha 1: Marca (Search · Exact + Phrase)
+├── Campanha 1: Marca (Search · Exact + Phrase) — budget baixo, ROI alto
 │   └── Ad Group: Brand
 │       ├── Keywords: [dra ana laura valadares], "ana laura valadares psiquiatra",
 │       │             [ana laura crm 89888]
 │       └── 3 RSAs com headlines focadas no nome + CRM
 │
-├── Campanha 2: Saúde Mental — Genéricas (Search · Phrase)
+├── Campanha 2: Saúde da Mulher (Search · Phrase) ★ PRIORIDADE
+│   ├── Ad Group: Saúde Mental Feminina
+│   │   └── Keywords: "psiquiatra saúde da mulher", "psiquiatra mulher online",
+│   │                 "psiquiatra feminina"
+│   ├── Ad Group: TPM e TDPM
+│   │   └── Keywords: "tpm psiquiatra", "tdpm tratamento", "transtorno disfórico pré-menstrual"
+│   ├── Ad Group: Puerpério e pós-parto
+│   │   └── Keywords: "depressão pós-parto psiquiatra", "psiquiatra puerpério",
+│   │                 "ansiedade pós-parto online"
+│   └── Ad Group: Climatério
+│       └── Keywords: "climatério psiquiatra", "menopausa ansiedade depressão",
+│                     "saúde mental menopausa"
+│
+├── Campanha 3: Insônia (Search · Phrase) ★ PRIORIDADE
+│   └── Ad Group: Insônia
+│       └── Keywords: "tratamento insônia psiquiatra", "psiquiatra insônia online",
+│                     "remédio para dormir psiquiatra", "insônia crônica tratamento"
+│
+├── Campanha 4: Saúde Mental — Genéricas (Search · Phrase) — secundária
 │   ├── Ad Group: Psiquiatria Online
 │   │   └── Keywords: "psiquiatra online", "consulta psiquiatra online",
 │   │                 "psiquiatra teleconsulta"
@@ -104,22 +122,26 @@ Conta: Dra. Ana Laura Valadares
 │   │   └── Keywords: "tratamento ansiedade online", "psiquiatra ansiedade"
 │   ├── Ad Group: Depressão
 │   │   └── Keywords: "psiquiatra depressão online" (sem promessas)
-│   ├── Ad Group: TDAH adulto
-│   │   └── Keywords: "tdah adulto psiquiatra", "diagnóstico tdah online"
-│   ├── Ad Group: Burnout
-│   │   └── Keywords: "burnout psiquiatra", "esgotamento profissional médico"
-│   └── Ad Group: Sono / Insônia
-│       └── Keywords: "tratamento insônia psiquiatra", "psiquiatra sono"
+│   └── Ad Group: TDAH adulto
+│       └── Keywords: "tdah adulto psiquiatra", "diagnóstico tdah online"
 │
-└── Campanha 3: Performance Max (com cautela na saúde mental)
+└── Campanha 5: Performance Max (com cautela na saúde mental)
     └── Asset Group: portrait, logo, headlines genéricas, sinal de marca
 ```
 
-**Estratégia de lance**: começar com **Maximize Conversions** sem tCPA por 2-3 semanas (até ter 30+ conversões), depois migrar para **Target CPA**.
+**Estratégia de lance**: começar com **Maximize Conversions** sem tCPA por 2-3 semanas (até ter 30+ conversões), depois migrar para **Target CPA**. Para Saúde da Mulher e Insônia, considerar também **bid adjustment** positivo +20-30% para o segmento mobile (busca em horário noturno, especialmente para insônia).
 
 **Localização**: Brasil inteiro (telemedicina). Excluir locais sem sinal (testes em RJ, MG, SP, PR primeiro).
 
-**Negative keywords** essenciais: `gratis`, `gratuito`, `sus`, `unimed`, `bradesco saude`, `vagas`, `concurso`, `emprego`, `clinica`, `psicologo` (somos psiquiatras), `pediatria`, `infantil` (até definir se atende).
+**Negative keywords** essenciais (em todas as campanhas):
+- Custo: `gratis`, `gratuito`, `sus`, `unimed`, `bradesco saude`, `amil`
+- Recrutamento: `vagas`, `concurso`, `emprego`, `salário`, `currículo`
+- Off-target: `clinica`, `psicologo` (somos psiquiatras), `pediatria`, `infantil`,
+  `adolescente` (até a Dra. definir faixa etária mínima)
+- Para campanha de Insônia, adicionar: `chá`, `caseiro`, `natural`, `meditação`,
+  `youtube`, `dicas` (intenção informativa, não comercial)
+- Para campanha de Saúde da Mulher: `ginecologista`, `obstetra` (especialidade diferente),
+  `dieta`, `emagrecer` (escopo errado)
 
 ---
 
