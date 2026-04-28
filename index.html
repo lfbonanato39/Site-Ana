@@ -41,7 +41,7 @@
 
 <!-- ============================================================
      Google Consent Mode v2 (LGPD-friendly: nothing tracks until consent)
-     Replace G-V80CXY51QP (GA4) and AW-XXXXXXXXXX (Google Ads) below.
+     Replace G-V80CXY51QP (GA4) and AW-18126057890 (Google Ads) below.
      Conversion labels: see GOOGLE-ADS-SETUP.md
      ============================================================ -->
 <script>
@@ -76,7 +76,7 @@
 <script>
   gtag('js', new Date());
   gtag('config', 'G-V80CXY51QP', { send_page_view: true, anonymize_ip: true });
-  gtag('config', 'AW-XXXXXXXXXX');
+  gtag('config', 'AW-18126057890');
 </script>
 
 <link rel="stylesheet" href="assets/tokens.css">
@@ -1214,7 +1214,7 @@
 
   // ============================================================
   // Tracking — dataLayer + gtag (GA4 + Google Ads)
-  // Replace 'AW-XXXXXXXXXX/<label>' with real conversion labels.
+  // Replace 'AW-18126057890/<label>' with real conversion labels.
   // See GOOGLE-ADS-SETUP.md for the conversion catalog.
   // ============================================================
   window.dataLayer = window.dataLayer || [];
@@ -1233,7 +1233,7 @@
   // userData: { email?: string, phone?: string } — sent hashed for Enhanced Conversions.
   const conversion = async (label, value = 0, userData) => {
     if (typeof gtag !== 'function') return;
-    const payload = { send_to: 'AW-XXXXXXXXXX/' + label, value: value, currency: 'BRL' };
+    const payload = { send_to: 'AW-18126057890/' + label, value: value, currency: 'BRL' };
     if (userData && (userData.email || userData.phone)) {
       const ud = {};
       if (userData.email) ud.sha256_email_address = await sha256(userData.email);
@@ -1249,14 +1249,14 @@
       const sectionId = section ? (section.id || section.className.split(' ')[0]) : 'unknown';
       const label = (a.textContent || '').trim().slice(0, 60);
       track('whatsapp_click', { source: sectionId, label });
-      conversion('WHATSAPP_CLICK_LABEL'); // value left to you per CPL
+      conversion('tANcCOfHnaQcEKLjlsND', 15); // WhatsApp Click — R$ 15 proxy value
     });
   });
   // Email clicks — secondary lead
   document.querySelectorAll('a[href^="mailto:"]').forEach((a) => {
     a.addEventListener('click', () => {
       track('email_click', { source: a.closest('section, footer')?.id || 'unknown' });
-      conversion('EMAIL_CLICK_LABEL');
+      conversion('pwkGCOrHnaQcEKLjlsND', 5); // Email Click — R$ 5 proxy value
     });
   });
   // Engagement: scroll depth (25/50/75/100)
@@ -1389,7 +1389,7 @@
         reason: reason || 'unspecified', note_len: note.length
       });
       // Enhanced Conversion: include hashed email when provided
-      conversion('QUALIFIED_LEAD_LABEL', 50, email ? { email } : undefined);
+      conversion('bSbqCOTHnaQcEKLjlsND', 50, email ? { email } : undefined); // Qualified Lead — R$ 50
       const lines = [
         'Olá, Dra. Ana Laura.',
         name ? `Meu nome é ${name}.` : '',
