@@ -25,9 +25,9 @@ Enquanto a URL não for substituída, o site funciona normalmente — só que se
 3. Renomeie a aba 1 (canto inferior esquerdo) para **`Leads`**.
 4. Pode deixar vazia — o script cria os cabeçalhos automaticamente na primeira execução. Caso queira já criar manualmente, use a primeira linha:
 
-| A | B | C | D | E | F | G | H |
-|---|---|---|---|---|---|---|---|
-| Timestamp | Nome | Motivo | Observação | Origem (URL) | Referrer | Destino (WhatsApp) | Tipo |
+| A | B | C | D | E | F | G | H | I |
+|---|---|---|---|---|---|---|---|---|
+| Timestamp | Nome | E-mail | Motivo | Observação | Origem (URL) | Referrer | Destino (WhatsApp) | Tipo |
 
 > Tipo = `form` (paciente preencheu) ou `skipped` (paciente pulou o formulário).
 
@@ -54,10 +54,10 @@ function doPost(e) {
     // Cabeçalho na primeira execução
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([
-        'Timestamp', 'Nome', 'Motivo', 'Observação',
+        'Timestamp', 'Nome', 'E-mail', 'Motivo', 'Observação',
         'Origem (URL)', 'Referrer', 'Destino (WhatsApp)', 'Tipo'
       ]);
-      sheet.getRange(1, 1, 1, 8).setFontWeight('bold');
+      sheet.getRange(1, 1, 1, 9).setFontWeight('bold');
       sheet.setFrozenRows(1);
     }
 
@@ -65,6 +65,7 @@ function doPost(e) {
     sheet.appendRow([
       new Date(),                          // Timestamp do servidor
       String(params.name || ''),
+      String(params.email || ''),
       String(params.reason || ''),
       String(params.note || ''),
       String(params.source_url || ''),
@@ -111,7 +112,7 @@ function doGet() {
 
 ## 4. Plugar a URL no site
 
-Em [Landing Page.html](Landing%20Page.html), procure por:
+Em [index.html](index.html), procure por:
 
 ```js
 const SHEETS_WEBHOOK_URL = 'SHEETS_WEBHOOK_URL_PLACEHOLDER';

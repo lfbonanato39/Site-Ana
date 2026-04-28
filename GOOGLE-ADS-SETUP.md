@@ -20,12 +20,12 @@
 ### 1.1. GA4 Measurement ID
 1. Crie/abra a propriedade GA4 em <https://analytics.google.com>
 2. Admin → Streams de dados → Web → copie o **Measurement ID** (formato `G-XXXXXXXXXX`)
-3. **Substituir em [Landing Page.html](Landing%20Page.html)** — `G-XXXXXXXXXX` aparece **3 vezes** (todas no `<head>`).
+3. **Substituir em [index.html](index.html)** — `G-XXXXXXXXXX` aparece **3 vezes** (todas no `<head>`).
 
 ### 1.2. Google Ads Conversion ID
 1. Em <https://ads.google.com> → Ferramentas → Medição → Conversões
 2. Criar conversões (ver §2). O **ID** é o mesmo para todas (`AW-XXXXXXXXXX`)
-3. **Substituir em [Landing Page.html](Landing%20Page.html)** — `AW-XXXXXXXXXX` aparece em **2 lugares**: no `<head>` (`gtag('config', ...)`) e no helper `conversion()` no JS.
+3. **Substituir em [index.html](index.html)** — `AW-XXXXXXXXXX` aparece em **2 lugares**: no `<head>` (`gtag('config', ...)`) e no helper `conversion()` no JS.
 
 ### 1.3. Conversion Labels (um por evento)
 Cada conversão criada no Google Ads gera um **label** (string curta, ~11 chars). Substituir os placeholders no JS:
@@ -36,7 +36,7 @@ Cada conversão criada no Google Ads gera um **label** (string curta, ~11 chars)
 | `EMAIL_CLICK_LABEL` | clique em `mailto:` | "Email Click" |
 | `QUALIFIED_LEAD_LABEL` | submit do pré-form modal | "Qualified Lead" |
 
-Procurar por `XXXXXXXXX_LABEL` no [Landing Page.html](Landing%20Page.html).
+Procurar por `XXXXXXXXX_LABEL` no [index.html](index.html).
 
 ---
 
@@ -220,7 +220,7 @@ Quando substituir os 3 placeholders:
 
 ## 9. Checklist final antes de publicar campanhas
 
-- [ ] Substituir `G-XXXXXXXXXX` (3×) e `AW-XXXXXXXXXX` (2×) no `Landing Page.html`
+- [ ] Substituir `G-XXXXXXXXXX` (3×) e `AW-XXXXXXXXXX` (2×) no `index.html`
 - [ ] Substituir os 3 `*_LABEL` no JS pelos labels reais
 - [ ] Criar as 3 conversões no Google Ads + ativar Enhanced Conversions
 - [ ] No GA4, marcar `whatsapp_click` e `preform_qualified_lead` como conversão

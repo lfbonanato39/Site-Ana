@@ -1,0 +1,25 @@
+# =========================================================================
+#  Não publicar no Vercel — manter privado / fora do bundle
+# =========================================================================
+
+# Ferramentas de desenvolvimento Claude / agents
+.agents/
+.audit/
+.claude/
+skills-lock.json
+
+# Documentação interna (NÃO deve ficar acessível na web pública)
+*.md
+GOOGLE-ADS-SETUP.md
+SHEETS-SETUP.md
+
+# Duplicatas legadas (existem só localmente — já no .gitignore)
+uploads/
+screenshots/
+debug_footer*.png
+
+# Lixos comuns de SO/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
