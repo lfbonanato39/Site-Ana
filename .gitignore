@@ -5,6 +5,7 @@
 # --- Auditoria e ferramentas de desenvolvimento (não fazem parte do site) ---
 .audit/
 .claude/
+.agents/
 
 # --- Duplicatas e artefatos legados (originais do Claude Design) ---
 uploads/
