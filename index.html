@@ -80,7 +80,7 @@
 </script>
 
 <link rel="stylesheet" href="assets/tokens.css">
-<link rel="stylesheet" href="styles.css?v=29">
+<link rel="stylesheet" href="styles.css?v=30">
 
 <!-- No-JS fallback: keep all .reveal content visible if JS is disabled -->
 <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
@@ -128,7 +128,7 @@
       <a href="#jornada">Jornada</a>
       <a href="#duvidas">Dúvidas</a>
     </nav>
-    <a href="#contato" class="btn btn--primary">Agendar consulta <span class="arrow">→</span></a>
+    <a href="https://wa.me/5531971546161" target="_blank" rel="noopener" class="btn btn--primary">Agendar consulta <span class="arrow">→</span></a>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-controls="mobileMenu" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
     </button>
@@ -149,7 +149,7 @@
     <a href="#duvidas" data-close>Dúvidas</a>
     <a href="#contato" data-close>Contato</a>
   </nav>
-  <a href="#contato" class="btn btn--primary" data-close>Agendar consulta <span class="arrow">→</span></a>
+  <a href="https://wa.me/5531971546161" target="_blank" rel="noopener" class="btn btn--primary" data-close>Agendar consulta <span class="arrow">→</span></a>
 </div>
 
 <main id="main">
@@ -170,7 +170,7 @@
         Atendimento psiquiátrico online com escuta ativa, profundidade e respeito <em>à singularidade e à história</em> de cada paciente.
       </h1>
       <div class="hero__actions">
-        <a href="#contato" class="btn btn--primary">Agendar consulta <span class="arrow">→</span></a>
+        <a href="https://wa.me/5531971546161" target="_blank" rel="noopener" class="btn btn--primary">Agendar consulta <span class="arrow">→</span></a>
         <a href="https://wa.me/5531971546161" target="_blank" rel="noopener" class="btn btn--ghost">
           Falar no WhatsApp <span class="arrow">→</span>
         </a>
@@ -544,6 +544,18 @@
       </li>
       <li class="area-card">
         <div class="area-card__num">09</div>
+        <div class="area-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 6l14 6v12c0 8-6 14-14 16-8-2-14-8-14-16V12l14-6z"/>
+            <path d="M14 22c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>
+            <path d="M14 28c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>
+          </svg>
+        </div>
+        <div class="area-card__name">Transtorno de <em>estresse pós-traumático</em></div>
+        <div class="area-card__desc">Sintomas persistentes após eventos traumáticos: hipervigilância, revivências e evitação.</div>
+      </li>
+      <li class="area-card">
+        <div class="area-card__num">10</div>
         <div class="area-card__icon" aria-hidden="true">
           <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M24 8c-6 6-10 12-10 18a10 10 0 0 0 20 0c0-6-4-12-10-18z"/>
@@ -1390,14 +1402,14 @@
       });
       // Enhanced Conversion: include hashed email when provided
       conversion('bSbqCOTHnaQcEKLjlsND', 50, email ? { email } : undefined); // Qualified Lead — R$ 50
-      const lines = [
+      const sections = [
         'Olá, Dra. Ana Laura.',
-        name ? `Meu nome é ${name}.` : '',
-        email ? `Meu e-mail: ${email}.` : '',
-        reason ? `Gostaria de conversar sobre: ${reason}.` : '',
-        note ? note : '',
+        name ? `Meu nome é *${name}*.` : '',
+        email ? `E-mail: ${email}` : '',
+        reason ? `Gostaria de conversar sobre:\n*${reason}*` : '',
+        note ? `Observação:\n${note}` : '',
       ].filter(Boolean);
-      send(lines.join(' '), { name, email, reason, note, submission_type: 'form' });
+      send(sections.join('\n\n'), { name, email, reason, note, submission_type: 'form' });
     });
   })();
 

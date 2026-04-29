@@ -1129,7 +1129,7 @@ body::before {
    HOW IT WORKS
    ========================================================================= */
 .journey {
-  padding: 140px 0;
+  padding: 110px 0;
   background: var(--ivory-200);
   position: relative;
 }
@@ -1213,7 +1213,7 @@ body::before {
    ========================================================================= */
 .praise {
   position: relative;
-  padding: 160px 0 150px;
+  padding: 110px 0 100px;
   background:
     radial-gradient(ellipse at 20% 0%, rgba(210,181,137,0.16) 0%, transparent 55%),
     radial-gradient(ellipse at 85% 100%, rgba(33,46,81,0.06) 0%, transparent 55%),
@@ -1477,7 +1477,7 @@ body::before {
    FAQ
    ========================================================================= */
 .faq {
-  padding: 140px 0;
+  padding: 110px 0;
   background: var(--cream-300);
 }
 .faq__inner {
