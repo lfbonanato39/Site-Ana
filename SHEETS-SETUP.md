@@ -23,27 +23,45 @@ Enquanto a URL não for substituída, o site funciona normalmente — só que se
 1. Abra <https://sheets.new> (cria uma planilha nova rápido).
 2. Renomeie para algo como **"Leads — Site Dra. Ana Laura"**.
 3. Renomeie a aba 1 (canto inferior esquerdo) para **`Leads`**.
-4. Pode deixar vazia — o script cria os cabeçalhos automaticamente na primeira execução. Caso queira já criar manualmente, use a primeira linha:
+4. Pode deixar vazia — o script cria os cabeçalhos automaticamente na primeira execução.
 
-| A | B | C | D | E | F | G | H | I |
-|---|---|---|---|---|---|---|---|---|
-| Timestamp | Nome | E-mail | Motivo | Observação | Origem (URL) | Referrer | Destino (WhatsApp) | Tipo |
-
-> Tipo = `form` (paciente preencheu) ou `skipped` (paciente pulou o formulário).
+> Schema atualizado em **2026-04-28** (Fase 2 — pré-Ads). Agora persiste WhatsApp, atribuição de campanha (UTMs + gclid), origem do botão (`button_location`), e tipo de formulário (modal principal vs. exit-intent).
 
 ---
 
-## 2. Criar o Apps Script Web App
+## ⚠️ Ação necessária se você já tem a planilha rodando
+
+Se você criou a planilha e o Apps Script antes da Fase 2, o schema antigo capturava apenas 9 colunas. **O frontend agora envia 21 campos**, e os novos serão silenciosamente descartados pelo script antigo.
+
+Para passar a capturar tudo:
+
+1. Abra o Apps Script atual (Extensões → Apps Script na sua planilha).
+2. Substitua a função `doPost` pelo código abaixo (versão Fase 2).
+3. **Não** crie um novo deployment — basta salvar o código. O endpoint atual continua valendo (URL não muda).
+4. Na planilha existente, **adicione manualmente as novas colunas** depois das antigas, OU crie uma nova aba e o script preencherá os cabeçalhos sozinho na primeira execução.
+
+> Não é preciso mexer no `lead-capture.js` nem no `index.html` — apenas no Apps Script.
+
+---
+
+## 2. Criar / atualizar o Apps Script Web App
 
 1. Na planilha, vá em **Extensões → Apps Script**.
-2. Apague o `function myFunction() {}` que vem por padrão.
+2. Apague o `function myFunction() {}` que vem por padrão (ou a versão antiga do `doPost`).
 3. Cole o código abaixo:
 
-```javascript
-// Web App receiver — escreve cada lead em uma nova linha da aba "Leads".
-// Suporta POST como application/x-www-form-urlencoded (sendBeacon nativo).
+> ℹ️ Cabeçalhos abaixo estão em ASCII puro para evitar erros de copy-paste no editor do Apps Script. Depois de colar e salvar, você pode renomear as colunas direto na planilha (ex: "Origem botao" → "Origem (botão)") — os nomes só importam visualmente, o código não depende deles.
 
+```javascript
 const SHEET_NAME = 'Leads';
+
+const HEADERS = [
+  'Timestamp', 'Timezone', 'Form', 'Tipo', 'Origem botao',
+  'Nome', 'WhatsApp', 'WhatsApp raw', 'E-mail', 'Tema', 'Observacao',
+  'URL de origem', 'Referrer', 'Destino WhatsApp',
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+  'gclid', 'User-Agent'
+];
 
 function doPost(e) {
   try {
@@ -51,27 +69,35 @@ function doPost(e) {
     let sheet = ss.getSheetByName(SHEET_NAME);
     if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
 
-    // Cabeçalho na primeira execução
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        'Timestamp', 'Nome', 'E-mail', 'Motivo', 'Observação',
-        'Origem (URL)', 'Referrer', 'Destino (WhatsApp)', 'Tipo'
-      ]);
-      sheet.getRange(1, 1, 1, 9).setFontWeight('bold');
+      sheet.appendRow(HEADERS);
+      sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
       sheet.setFrozenRows(1);
     }
 
-    const params = (e && e.parameter) ? e.parameter : {};
+    const p = (e && e.parameter) ? e.parameter : {};
     sheet.appendRow([
-      new Date(),                          // Timestamp do servidor
-      String(params.name || ''),
-      String(params.email || ''),
-      String(params.reason || ''),
-      String(params.note || ''),
-      String(params.source_url || ''),
-      String(params.referrer || ''),
-      String(params.target || ''),
-      String(params.submission_type || 'form')
+      new Date(),
+      String(p.timezone || 'America/Sao_Paulo'),
+      String(p.form_type || 'main'),
+      String(p.submission_type || 'form'),
+      String(p.button_location || ''),
+      String(p.name || ''),
+      String(p.whatsapp || ''),
+      String(p.whatsapp_raw || ''),
+      String(p.email || ''),
+      String(p.reason || ''),
+      String(p.note || ''),
+      String(p.source_url || ''),
+      String(p.referrer || ''),
+      String(p.target || ''),
+      String(p.utm_source || ''),
+      String(p.utm_medium || ''),
+      String(p.utm_campaign || ''),
+      String(p.utm_content || ''),
+      String(p.utm_term || ''),
+      String(p.gclid || ''),
+      String(p.user_agent || '')
     ]);
 
     return ContentService
@@ -84,7 +110,6 @@ function doPost(e) {
   }
 }
 
-// Endpoint de teste no navegador (opcional)
 function doGet() {
   return ContentService
     .createTextOutput('Lead capture endpoint ativo. Use POST.')

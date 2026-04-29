@@ -2234,6 +2234,107 @@ body::before {
 }
 .exit-intent__dismiss:hover { color: var(--navy-800); }
 
+/* Inline validation feedback (modal + exit-intent) */
+.field-error {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: #b04545;
+  margin-top: 4px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.preform__field.has-error input,
+.preform__field.has-error textarea,
+.exit-intent__field.has-error input {
+  border-color: #b04545;
+  background: #fcf2f2;
+}
+.preform__fieldset.has-error .preform__option span {
+  border-color: #d8b8b8;
+}
+
+/* LGPD consent checkbox */
+.preform__consent {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  font-weight: 300;
+  margin-top: 4px;
+  cursor: pointer;
+}
+.preform__consent input[type="checkbox"] {
+  width: 16px; height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--navy-800);
+  cursor: pointer;
+}
+.preform__consent a { color: var(--champagne-700); text-decoration: underline; }
+.preform__consent a:hover { color: var(--navy-800); }
+
+/* Submit disabled until consent is checked */
+.preform__submit:disabled,
+.preform__submit:disabled:hover {
+  background: #b9bcc6;
+  color: #f0eee9;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Exit-intent form (replaces old single-link layout) */
+.exit-intent__form {
+  display: flex; flex-direction: column; gap: 12px;
+  text-align: left;
+  margin: 18px 0 0;
+}
+.exit-intent__field { display: flex; flex-direction: column; gap: 6px; }
+.exit-intent__field-label {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  font-weight: 500;
+}
+.exit-intent__field input {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: var(--navy-800);
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 3px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border 200ms, background 200ms;
+}
+.exit-intent__field input:focus {
+  border-color: var(--champagne-500);
+}
+.exit-intent__form > .exit-intent__cta {
+  margin-top: 6px;
+  width: 100%;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+.exit-intent__footer-note {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  color: var(--fg-3);
+  margin: 14px 0 0;
+  font-style: italic;
+}
+.exit-intent__visual--success {
+  color: #5a8a4f;
+  opacity: 0.85;
+  animation: none;
+}
+
 @media (max-width: 600px) {
   .preform__panel { padding: 36px 24px 28px; }
   .preform__options { grid-template-columns: 1fr; }
