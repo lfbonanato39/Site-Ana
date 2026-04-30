@@ -9,20 +9,37 @@ Mapa completo de eventos, payload da planilha e checklist para Google Ads / GA4 
 | Plataforma | ID | Onde fica |
 |---|---|---|
 | Google Analytics 4 | `G-V80CXY51QP` | `index.html` (head) |
-| Google Ads | `AW-18126057890` | `index.html` (head) + `assets/js/lead-capture.js` (`conversion()`) |
+| Google Ads (conta primária) | `AW-18126057890` | `index.html` (head) + `assets/js/lead-capture.js` (`conversion()`) |
+| Google Ads (conta secundária) | `AW-18068581578` | `index.html` (head) + chamadas inline `gtag('event', 'conversion', ...)` em `assets/js/lead-capture.js` |
 | Apps Script Web App (Sheets) | `https://script.google.com/macros/s/AKfycbwQeotC.../exec` | `assets/js/lead-capture.js` → `LEAD_CONFIG.WEBHOOK_URL` |
+
+> As duas contas Google Ads rodam **em paralelo**: cada evento de conversão dispara para ambas. Não há failover nem deduplicação — é tracking duplo intencional (contas separadas, relatórios separados).
 
 ### Conversion labels do Google Ads
 
-Definidos em [`assets/js/lead-capture.js`](assets/js/lead-capture.js):
+#### Conta primária — `AW-18126057890`
+
+Definidos em [`assets/js/lead-capture.js`](assets/js/lead-capture.js) via helper `conversion(label, value, userData)`:
 
 | Conversão | Label | Valor proxy | Onde dispara |
 |---|---|---|---|
 | WhatsApp Click | `tANcCOfHnaQcEKLjlsND` | R$ 15 | Todo clique em link `wa.me/...` |
-| Email Click | `pwkGCOrHnaQcEKLjlsND` | R$ 5 | Todo clique em link `mailto:` |
+| Email Click | `pwkGCOrHnaQcEKLjlsND` | R$ 5 | Todo clique em link `mailto:` (apenas em `index.html` — páginas legais não carregam `lead-capture.js`) |
 | Qualified Lead | `bSbqCOTHnaQcEKLjlsND` | R$ 50 | Submit do modal principal **e** do exit-intent |
 
 A conversão "Qualified Lead" usa **Enhanced Conversions**: e-mail e telefone são hashados em SHA-256 antes do envio.
+
+#### Conta secundária — `AW-18068581578`
+
+Disparadas via `gtag('event', 'conversion', { send_to: ... })` inline, logo após o `track()` correspondente. **Sem Enhanced Conversions** (chamada direta, sem hash de PII).
+
+| Conversão | Label | Valor proxy | Onde dispara | Ponto de integração |
+|---|---|---|---|---|
+| WhatsApp Click | `se8dCOzk66QcEMrZ4qdD` | R$ 15 | Todo clique em link `wa.me/...` | Handler `a[href*="wa.me"]` — após `track('whatsapp_click', ...)` |
+| Email Click | `VG8oCMOe7KQcEMrZ4qdD` | R$ 5 | Todo clique em link `mailto:` (apenas em `index.html`) | Handler `a[href^="mailto:"]` — após `track('email_click', ...)` |
+| Qualified Lead | `2J12CJD2hKUcEMrZ4qdD` | R$ 35 | Submit do modal principal **e** do exit-intent | Após cada `track('preform_qualified_lead', ...)` (2 ocorrências) |
+
+> Cada bloco está envolto em `if (typeof gtag === 'function')` para não quebrar quando o Consent Mode bloqueia o gtag.
 
 ---
 
