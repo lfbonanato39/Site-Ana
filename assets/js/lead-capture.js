@@ -304,6 +304,13 @@ document.querySelectorAll('a[href*="wa.me"]').forEach((a) => {
     const label = (a.textContent || '').trim().slice(0, 60);
     const buttonLocation = getButtonLocation(a);
     track('whatsapp_click', { source: sectionId, label, button_location: buttonLocation });
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18068581578/se8dCOzk66QcEMrZ4qdD',
+        'value': 15.00,
+        'currency': 'BRL'
+      });
+    }
     conversion('tANcCOfHnaQcEKLjlsND', 15); // WhatsApp Click — R$ 15 proxy value
   });
 });
@@ -312,6 +319,13 @@ document.querySelectorAll('a[href*="wa.me"]').forEach((a) => {
 document.querySelectorAll('a[href^="mailto:"]').forEach((a) => {
   a.addEventListener('click', () => {
     track('email_click', { source: a.closest('section, footer')?.id || 'unknown' });
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18068581578/VG8oCMOe7KQcEMrZ4qdD',
+        'value': 5.00,
+        'currency': 'BRL'
+      });
+    }
     conversion('pwkGCOrHnaQcEKLjlsND', 5); // Email Click — R$ 5 proxy value
   });
 });
@@ -541,6 +555,13 @@ setTimeout(() => track('engaged_30s'), 30000);
       note_len: note.length,
       button_location: lastButtonLocation
     });
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18068581578/2J12CJD2hKUcEMrZ4qdD',
+        'value': 35.00,
+        'currency': 'BRL'
+      });
+    }
     conversion('bSbqCOTHnaQcEKLjlsND', 50, { email, phone });
 
     const sections = [
@@ -712,6 +733,13 @@ setTimeout(() => track('engaged_30s'), 30000);
       reason: 'exit_intent', note_len: 0,
       button_location: 'exit_intent'
     });
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18068581578/2J12CJD2hKUcEMrZ4qdD',
+        'value': 35.00,
+        'currency': 'BRL'
+      });
+    }
     conversion('bSbqCOTHnaQcEKLjlsND', 50, { phone });
 
     if (formPanel) formPanel.hidden = true;

@@ -13,6 +13,15 @@
 - ✅ **Performance**: 332 KB total, FCP ~750ms — Quality Score do landing tende a ser alto
 - ✅ **Mobile-friendly** validado
 
+### Contas Google Ads ativas
+
+| Conta | ID | Status | Uso |
+|---|---|---|---|
+| Primária | `AW-18126057890` | ✅ Em produção | Conversões com Enhanced Conversions (hash SHA-256 de email/telefone) via helper `conversion()` |
+| Secundária | `AW-18068581578` | ✅ Em produção (paralelo) | Conversões inline `gtag('event', 'conversion', ...)` — sem Enhanced Conversions |
+
+> As duas contas rodam **em paralelo**. Cada conversão (WhatsApp Click, Email Click, Qualified Lead) dispara para as duas contas simultaneamente. A conta primária permanece a fonte canônica para Enhanced Conversions; a secundária recebe tracking duplo para relatórios separados.
+
 ---
 
 ## 1. IDs que você precisa colocar (3 lugares)
@@ -42,11 +51,23 @@ Procurar por `XXXXXXXXX_LABEL` no [index.html](index.html).
 
 ## 2. Conversões a criar no Google Ads
 
-| Nome | Categoria | Valor | Contagem | Janela | Ação |
-|---|---|---:|---|---|---|
-| **Qualified Lead** | Submit lead form | R$ 50,00 | Uma | 30 dias | Primary |
-| **WhatsApp Click** | Contact | R$ 15,00 | Uma | 30 dias | Primary |
-| **Email Click** | Contact | R$ 5,00 | Uma | 30 dias | Secondary |
+### 2.1. Conta primária `AW-18126057890`
+
+| Nome | Categoria | Valor | Label | Contagem | Janela | Ação |
+|---|---|---:|---|---|---|---|
+| **Qualified Lead** | Submit lead form | R$ 50,00 | `bSbqCOTHnaQcEKLjlsND` | Uma | 30 dias | Primary |
+| **WhatsApp Click** | Contact | R$ 15,00 | `tANcCOfHnaQcEKLjlsND` | Uma | 30 dias | Primary |
+| **Email Click** | Contact | R$ 5,00 | `pwkGCOrHnaQcEKLjlsND` | Uma | 30 dias | Secondary |
+
+### 2.2. Conta secundária `AW-18068581578` (em paralelo)
+
+| Nome | Categoria | Valor | Label | Pontos de integração no código |
+|---|---|---:|---|---|
+| **Qualified Lead** | Submit lead form | R$ 35,00 | `2J12CJD2hKUcEMrZ4qdD` | `assets/js/lead-capture.js` — após cada `track('preform_qualified_lead', ...)` (modal principal + exit-intent) |
+| **WhatsApp Click** | Contact | R$ 15,00 | `se8dCOzk66QcEMrZ4qdD` | `assets/js/lead-capture.js` — handler `a[href*="wa.me"]`, após `track('whatsapp_click', ...)` |
+| **Email Click** | Contact | R$ 5,00 | `VG8oCMOe7KQcEMrZ4qdD` | `assets/js/lead-capture.js` — handler `a[href^="mailto:"]`, após `track('email_click', ...)` |
+
+> **Tracking duplo intencional**: cada uma das 3 conversões acima dispara para **ambas as contas**. Não há deduplicação — cada conta gera seus próprios relatórios. A conta primária `AW-18126057890` mantém o status canônico e é a única com Enhanced Conversions.
 
 > Os valores são proxies (não é valor de consulta — é **valor estimado por lead** baseado em CPL desejado / taxa de conversão de lead em paciente). Ajuste conforme dados reais aparecerem.
 
