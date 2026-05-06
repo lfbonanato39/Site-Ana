@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dra. Ana Laura Valadares · Links</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#212e51">
+<meta name="description" content="Dra. Ana Laura Valadares · Médica, Psiquiatria e Saúde Mental. CRM-MG 89888.">
+
+<link rel="icon" href="assets/logo_mark.png">
+<link rel="apple-touch-icon" href="assets/logo_mark.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="assets/portrait_studio.webp" type="image/webp" fetchpriority="high">
+
+<link rel="stylesheet" href="assets/tokens.css">
+
+<style>
+/* =========================================================================
+   /links — bio editorial mobile-first. Estilos isolados de styles.css.
+   ========================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg-1);
+  color: var(--fg-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ---- Camadas de fundo --------------------------------------------------- */
+.bg-grain {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.32 0 0 0 0 0.24 0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.bg-watermark {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120vw; max-width: 900px;
+  height: auto;
+  opacity: 0.045;
+  filter: blur(0.5px);
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+.bg-arc {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  color: var(--navy-800);
+  opacity: 0.10;
+}
+.bg-arc--tl { top: -180px; left: -180px; width: 520px; height: 520px; }
+.bg-arc--br { right: -200px; bottom: -240px; width: 620px; height: 620px; opacity: 0.06; color: var(--champagne-600); }
+
+/* ---- Container principal ------------------------------------------------ */
+.links {
+  position: relative;
+  z-index: 2;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 20px 20px calc(16px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ---- Conjunto Foto + Selo orbital -------------------------------------- */
+.portrait-wrap {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  margin: 0 auto 14px;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) 80ms forwards;
+}
+
+.portrait {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 124px; height: 124px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(33,46,81,0.14), 0 3px 8px rgba(33,46,81,0.06);
+  background: var(--cream-400);
+  z-index: 2;
+}
+.portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.portrait-frame {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 138px; height: 138px;
+  border-radius: 50%;
+  border: 1.5px solid var(--champagne-500);
+  z-index: 1;
+}
+.portrait-frame::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(184, 152, 95, 0.35);
+}
+
+.portrait-stamp {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 168px; height: 168px;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  animation: spin 60s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ---- Tipografia --------------------------------------------------------- */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--champagne-700);
+  margin: 0 0 8px;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) 200ms forwards;
+}
+
+h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 6vw, 30px);
+  line-height: 1.1;
+  font-weight: 500;
+  color: var(--navy-800);
+  letter-spacing: -0.005em;
+  margin: 0 0 6px;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) 280ms forwards;
+}
+
+.crm {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--fg-3);
+  margin: 0;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) 360ms forwards;
+}
+
+.hr-hairline {
+  width: 40px;
+  height: 1px;
+  background: var(--hairline);
+  margin: 16px auto 16px;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) 440ms forwards;
+}
+
+/* ---- Botões CTA --------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 400ms var(--ease-out);
+  white-space: nowrap;
+  margin-bottom: 10px;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) forwards;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn--primary {
+  background: var(--navy-800);
+  color: var(--cream-300);
+  box-shadow: 0 1px 2px rgba(33,46,81,0.10);
+  animation-delay: 520ms;
+}
+.btn--primary:hover {
+  background: var(--navy-900);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(33,46,81,0.18);
+}
+.btn--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(33,46,81,0.10);
+}
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--navy-800);
+  border: 1px solid rgba(33,46,81,0.20);
+  animation-delay: 600ms;
+}
+.btn--ghost:hover {
+  border-color: var(--navy-800);
+  background: rgba(33,46,81,0.04);
+}
+.btn .arrow {
+  transition: transform 400ms var(--ease-out);
+  display: inline-block;
+}
+.btn:hover .arrow { transform: translateX(4px); }
+
+/* ---- Trio de ícones sociais -------------------------------------------- */
+.socials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) 720ms forwards;
+}
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(33, 46, 81, 0.18);
+  color: var(--navy-800);
+  transition: all 350ms var(--ease-out);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.socials a:hover {
+  border-color: var(--champagne-500);
+  background: rgba(210, 181, 137, 0.18);
+  color: var(--navy-900);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(33,46,81,0.10);
+}
+.socials a:active { transform: translateY(0); }
+.socials svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* ---- Footer ------------------------------------------------------------- */
+.links-footer {
+  margin-top: auto;
+  padding-top: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 800ms var(--ease-out) 820ms forwards;
+}
+.links-footer .hr-hairline {
+  margin: 0 0 4px;
+  width: 28px;
+  animation: none;
+  opacity: 1;
+}
+.links-footer img {
+  opacity: 0.55;
+  width: 18px;
+  height: auto;
+}
+.links-footer p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--fg-3);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Animações ---------------------------------------------------------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Tablet+ ------------------------------------------------------------ */
+@media (min-width: 768px) {
+  .links {
+    max-width: 480px;
+    padding-top: 56px;
+    padding-bottom: 48px;
+  }
+  .portrait-wrap { width: 240px; height: 240px; margin-bottom: 24px; }
+  .portrait { width: 178px; height: 178px; }
+  .portrait-frame { width: 196px; height: 196px; }
+  .portrait-stamp { width: 240px; height: 240px; }
+  .eyebrow { font-size: 10.5px; letter-spacing: 0.28em; margin-bottom: 12px; }
+  h1 { font-size: clamp(28px, 4vw, 36px); margin-bottom: 10px; }
+  .crm { font-size: 13.5px; }
+  .btn { padding: 17px 28px; font-size: 11px; letter-spacing: 0.24em; margin-bottom: 12px; }
+  .hr-hairline { margin: 24px auto; width: 48px; }
+  .socials { margin-top: 24px; gap: 16px; }
+  .socials a { width: 54px; height: 54px; }
+  .socials svg { width: 22px; height: 22px; }
+}
+
+/* ---- Acessibilidade: reduzir movimento --------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .portrait-stamp { animation: none; }
+  .portrait-wrap, .eyebrow, h1, .crm, .hr-hairline, .btn, .socials, .links-footer {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .btn { transition: background 200ms, border-color 200ms, color 200ms; }
+  .btn:hover { transform: none; }
+  .btn .arrow { transition: none; }
+  .btn:hover .arrow { transform: none; }
+  .socials a:hover { transform: none; }
+}
+
+/* ---- Foco visível para acessibilidade ----------------------------------- */
+.btn:focus-visible,
+.socials a:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ---- Print -------------------------------------------------------------- */
+@media print {
+  .bg-grain, .bg-watermark, .bg-arc, .portrait-stamp { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Camadas de fundo -->
+<div class="bg-grain" aria-hidden="true"></div>
+<img class="bg-watermark" src="assets/logo_mark.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+<svg class="bg-arc bg-arc--tl" viewBox="0 0 520 520" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+  <ellipse cx="260" cy="260" rx="240" ry="258"/>
+  <ellipse cx="260" cy="260" rx="200" ry="218"/>
+</svg>
+<svg class="bg-arc bg-arc--br" viewBox="0 0 620 620" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+  <ellipse cx="310" cy="310" rx="290" ry="308"/>
+  <ellipse cx="310" cy="310" rx="240" ry="258"/>
+</svg>
+
+<main class="links">
+
+  <!-- Foto com moldura champagne + selo orbital girando -->
+  <div class="portrait-wrap">
+    <svg class="portrait-stamp" viewBox="0 0 240 240" aria-hidden="true">
+      <defs>
+        <path id="stampPath" d="M 120,120 m -103,0 a 103,103 0 1,1 206,0 a 103,103 0 1,1 -206,0"/>
+      </defs>
+      <text font-family="Jost, sans-serif" font-size="9" letter-spacing="3.4" fill="#212e51" font-weight="500">
+        <textPath href="#stampPath" startOffset="0">ACOLHIMENTO · ESCUTA · TÉCNICA · PRESENÇA · </textPath>
+      </text>
+    </svg>
+    <div class="portrait-frame" aria-hidden="true"></div>
+    <picture class="portrait">
+      <source type="image/webp" srcset="assets/portrait_studio.webp">
+      <img src="assets/portrait_studio.jpeg" alt="Retrato da Dra. Ana Laura Valadares" width="1200" height="1500" fetchpriority="high" decoding="async">
+    </picture>
+  </div>
+
+  <p class="eyebrow">Médica · Psiquiatria / Saúde Mental</p>
+  <h1>Dra. Ana Laura Valadares</h1>
+  <p class="crm">CRM-MG 89888</p>
+
+  <div class="hr-hairline" aria-hidden="true"></div>
+
+  <a class="btn btn--primary" href="https://wa.me/5531971546161?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20consulta." target="_blank" rel="noopener">
+    Agendar consulta <span class="arrow" aria-hidden="true">→</span>
+  </a>
+
+  <a class="btn btn--ghost" href="https://www.psqdraanalaura.com.br/">
+    Acesse meu site <span class="arrow" aria-hidden="true">→</span>
+  </a>
+
+  <nav class="socials" aria-label="Redes sociais">
+    <a href="https://www.instagram.com/alcvaladares/" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.6" cy="6.4" r="0.9" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+    <a href="https://g.page/r/CVmkinhfE8XREBM/" target="_blank" rel="noopener" aria-label="Google Meu Negócio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 21.5c-3-3.5-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-4 8.5-7 12z"/>
+        <circle cx="12" cy="9.5" r="2.6"/>
+      </svg>
+    </a>
+    <a href="https://wa.me/5531971546161" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.91-7.01zM12.05 20.15h-.01a8.23 8.23 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.21 8.21 0 0 1-1.26-4.38c0-4.54 3.69-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.22 8.23zm4.51-6.16c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.56.12-.16.25-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.12-1.04-.38-1.99-1.22-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42-.14-.01-.31-.01-.48-.01-.16 0-.43.06-.66.31-.23.25-.86.85-.86 2.06 0 1.21.88 2.39 1.01 2.55.12.16 1.74 2.65 4.21 3.72.59.25 1.05.41 1.4.52.59.19 1.13.16 1.55.1.47-.07 1.46-.6 1.66-1.17.21-.58.21-1.07.14-1.18-.06-.11-.23-.18-.48-.3z"/>
+      </svg>
+    </a>
+  </nav>
+
+  <footer class="links-footer">
+    <div class="hr-hairline" aria-hidden="true"></div>
+    <img src="assets/logo_mark.png" alt="" loading="lazy" decoding="async">
+    <p>© Dra. Ana Laura Valadares · CRM-MG 89888 · Telemedicina</p>
+  </footer>
+
+</main>
+
+</body>
+</html>
