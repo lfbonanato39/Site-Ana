@@ -39,6 +39,14 @@
 <link rel="preconnect" href="https://www.google-analytics.com">
 <link rel="preload" as="image" href="assets/portrait_studio.webp" type="image/webp" fetchpriority="high">
 
+<!-- Google Fonts: non-blocking load (preload + onload swap)
+     Weights audited against styles.css usage on 2026-05-08:
+       Cormorant Garamond: 300, 400, 500, 700, italic 400
+       Jost: 300, 400, 500
+       Italiana: 400 -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Italiana&family=Jost:wght@300;400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Italiana&family=Jost:wght@300;400;500&display=swap"></noscript>
+
 <!-- ============================================================
      Google Consent Mode v2 (LGPD-friendly: nothing tracks until consent)
      Replace G-V80CXY51QP (GA4) and AW-18126057890 (Google Ads) below.
