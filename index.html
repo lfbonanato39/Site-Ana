@@ -1148,15 +1148,15 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
         <span class="preform__label">E-mail</span>
         <input type="email" name="preformEmail" placeholder="seu@email.com" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true">
       </label>
-      <fieldset class="preform__fieldset" aria-required="true">
+      <fieldset class="preform__fieldset">
         <legend class="preform__label">Tema do contato</legend>
-        <div class="preform__options">
-          <label class="preform__option"><input type="radio" name="preformReason" value="compulsão alimentar"><span>Compulsão alimentar</span></label>
-          <label class="preform__option"><input type="radio" name="preformReason" value="saúde mental da mulher (TPM, TDPM, puerpério, climatério)"><span>Saúde da mulher</span></label>
-          <label class="preform__option"><input type="radio" name="preformReason" value="ansiedade ou crises de ansiedade"><span>Ansiedade</span></label>
-          <label class="preform__option"><input type="radio" name="preformReason" value="depressão e oscilações de humor"><span>Depressão</span></label>
-          <label class="preform__option"><input type="radio" name="preformReason" value="dificuldade de foco / TDAH adulto"><span>TDAH</span></label>
-          <label class="preform__option"><input type="radio" name="preformReason" value="uma avaliação geral em saúde mental"><span>Avaliação geral</span></label>
+        <div class="preform__options" role="radiogroup" aria-required="true" aria-label="Tema do contato">
+          <label class="preform__option"><input type="radio" name="preformReason" value="compulsão alimentar" required><span>Compulsão alimentar</span></label>
+          <label class="preform__option"><input type="radio" name="preformReason" value="saúde mental da mulher (TPM, TDPM, puerpério, climatério)" required><span>Saúde da mulher</span></label>
+          <label class="preform__option"><input type="radio" name="preformReason" value="ansiedade ou crises de ansiedade" required><span>Ansiedade</span></label>
+          <label class="preform__option"><input type="radio" name="preformReason" value="depressão e oscilações de humor" required><span>Depressão</span></label>
+          <label class="preform__option"><input type="radio" name="preformReason" value="dificuldade de foco / TDAH adulto" required><span>TDAH</span></label>
+          <label class="preform__option"><input type="radio" name="preformReason" value="uma avaliação geral em saúde mental" required><span>Avaliação geral</span></label>
         </div>
       </fieldset>
       <label class="preform__field">
@@ -1262,21 +1262,30 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
   var gb = document.querySelector('.gradient-band');
   if (gb) {
     var gbTicking = false;
-    function panGradient() {
+    var gbTopAbs = 0, gbHeight = 0, gbVh = 0;
+    function measureGb() {
+      // getBoundingClientRect is forced-reflow expensive; only call on
+      // measurement events (initial + resize + orientationchange), never
+      // inside the scroll handler.
       var rect = gb.getBoundingClientRect();
-      var vh = window.innerHeight;
-      // raw progress: 0 when section top reaches viewport bottom, 1 when section bottom reaches viewport top
-      var raw = (vh - rect.top) / (vh + rect.height);
-      var p = Math.max(0, Math.min(1, raw));
-      // bg-size 220% gives 120% of pannable space; mapping 0→100% lets the navy slide in as we scroll
+      gbTopAbs = rect.top + window.pageYOffset;
+      gbHeight = rect.height;
+      gbVh = window.innerHeight;
+      panGradient();
+    }
+    function panGradient() {
+      var topInVp = gbTopAbs - window.pageYOffset;
+      var raw = (gbVh - topInVp) / (gbVh + gbHeight);
+      var p = raw < 0 ? 0 : raw > 1 ? 1 : raw;
       gb.style.backgroundPosition = '0 ' + (p * 100) + '%';
       gbTicking = false;
     }
-    panGradient();
+    measureGb();
     window.addEventListener('scroll', function () {
       if (!gbTicking) { gbTicking = true; requestAnimationFrame(panGradient); }
     }, { passive: true });
-    window.addEventListener('resize', panGradient, { passive: true });
+    window.addEventListener('resize', measureGb, { passive: true });
+    window.addEventListener('orientationchange', measureGb, { passive: true });
   }
 })();
 </script>
