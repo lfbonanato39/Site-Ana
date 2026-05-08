@@ -303,7 +303,8 @@ document.querySelectorAll('a[href*="wa.me"]').forEach((a) => {
     const sectionId = section ? (section.id || section.className.split(' ')[0]) : 'unknown';
     const label = (a.textContent || '').trim().slice(0, 60);
     const buttonLocation = getButtonLocation(a);
-    track('whatsapp_click', { source: sectionId, label, button_location: buttonLocation });
+    const flow = a.hasAttribute('data-wa-direct') ? 'direct' : 'modal';
+    track('whatsapp_click', { source: sectionId, label, button_location: buttonLocation, flow });
     conversion('tANcCOfHnaQcEKLjlsND', 15); // WhatsApp Click — R$ 15 proxy value
   });
 });
@@ -567,10 +568,12 @@ setTimeout(() => track('engaged_30s'), 30000);
     setTimeout(() => { window.open(url, '_blank', 'noopener'); close(); }, 60);
   });
 
-  // Intercept ALL wa.me clicks, but skip any link inside the exit-intent
-  // (the exit-intent now has its own form, no direct wa.me link)
+  // Intercept wa.me clicks to open the pre-form modal, except:
+  // - links inside the exit-intent (it has its own capture form)
+  // - links flagged data-wa-direct (low-friction CTAs that go straight to WhatsApp)
   document.querySelectorAll('a[href*="wa.me"]').forEach((a) => {
     if (a.closest('.exit-intent')) return;
+    if (a.hasAttribute('data-wa-direct')) return;
     a.addEventListener('click', (e) => {
       e.preventDefault();
       const location = getButtonLocation(a);
