@@ -32,20 +32,23 @@
 <link rel="icon" href="assets/logo_mark.png">
 <link rel="apple-touch-icon" href="assets/logo_mark.png">
 
-<!-- Performance: connect to font + analytics origins early -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Performance: connect to analytics origins early. Fonts are now self-hosted
+     (see assets/fonts/), so we no longer connect to fonts.googleapis.com or
+     fonts.gstatic.com — one less DNS+TLS handshake on the critical path. -->
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="preconnect" href="https://www.google-analytics.com">
 <link rel="preload" as="image" imagesrcset="assets/portrait_studio_sm.webp 900w, assets/portrait_studio.webp 1200w" imagesizes="(max-width: 600px) 100vw, 50vw" type="image/webp" fetchpriority="high">
 
-<!-- Google Fonts: non-blocking load (preload + onload swap)
-     Weights audited against styles.css usage on 2026-05-08:
-       Cormorant Garamond: 300, 400, 500, 700, italic 400
-       Jost: 300, 400, 500
-       Italiana: 400 -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Italiana&family=Jost:wght@300;400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Italiana&family=Jost:wght@300;400;500&display=swap"></noscript>
+<!-- Preload critical above-the-fold fonts so they start fetching in parallel
+     with HTML parse (the <style> below tells the browser to use them, but
+     preload kicks the request off ~50-100ms earlier on slow connections). -->
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/italiana.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jost.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/cormorant-garamond.woff2" crossorigin>
+
+<!-- Self-hosted fonts (latin subset). Inlined to avoid an extra request
+     for ~1 KB of CSS. Generation script: .audit/selfhost_fonts.py -->
+<style>@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:300 700;font-display:swap;src:url(/assets/fonts/cormorant-garamond.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400;font-display:swap;src:url(/assets/fonts/cormorant-garamond-italic.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Italiana';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/italiana.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Jost';font-style:normal;font-weight:300 500;font-display:swap;src:url(/assets/fonts/jost.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}</style>
 
 <!-- ============================================================
      Google Consent Mode v2 (LGPD-friendly: nothing tracks until consent)
@@ -103,7 +106,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
 .caption{font-family:var(--font-serif);font-size:var(--fs-caption);font-style:italic;color:var(--fg-3);font-weight:400}
 .quote{font-family:var(--font-serif);font-style:italic;font-size:26px;line-height:1.35;color:var(--navy-800);font-weight:400}
 </style>
-<link rel="stylesheet" href="styles.css?v=32">
+<link rel="stylesheet" href="styles.css?v=33">
 
 <!-- No-JS fallback: keep all .reveal content visible if JS is disabled -->
 <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
