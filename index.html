@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="preconnect" href="https://www.google-analytics.com">
-<link rel="preload" as="image" href="assets/portrait_studio.webp" type="image/webp" fetchpriority="high">
+<link rel="preload" as="image" imagesrcset="assets/portrait_studio_sm.webp 900w, assets/portrait_studio.webp 1200w" imagesizes="(max-width: 600px) 100vw, 50vw" type="image/webp" fetchpriority="high">
 
 <!-- Google Fonts: non-blocking load (preload + onload swap)
      Weights audited against styles.css usage on 2026-05-08:
@@ -137,7 +137,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
 <header class="header" id="siteHeader">
   <div class="header__inner">
     <a href="#top" class="brand">
-      <img src="assets/logo_mark.png" alt="" class="brand__mark" width="42" height="60" decoding="async">
+      <img src="assets/logo_mark.webp" alt="" class="brand__mark" width="42" height="60" decoding="async">
       <div>
         <div class="brand__name">Dra. Ana Laura</div>
         <div class="brand__tag">Psiquiatria | Saúde mental</div>
@@ -223,7 +223,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
       <div class="hero__frame"></div>
       <div class="hero__portrait">
         <picture>
-          <source type="image/webp" srcset="assets/portrait_studio.webp">
+          <source type="image/webp" srcset="assets/portrait_studio_sm.webp 900w, assets/portrait_studio.webp 1200w" sizes="(max-width: 600px) 100vw, 50vw">
           <img src="assets/portrait_studio.jpeg" alt="Retrato de Dra. Ana Laura Valadares" width="1200" height="1500" fetchpriority="high" decoding="async">
         </picture>
       </div>
@@ -239,7 +239,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
           </text>
         </svg>
         <div class="hero__stamp-mark">
-          <img src="assets/logo_mark.png" alt="" width="60" height="86" decoding="async">
+          <img src="assets/logo_mark.webp" alt="" width="60" height="86" decoding="async">
         </div>
       </div>
     </div>
@@ -265,7 +265,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
         </svg>
       </div>
       <div class="seal__halo"></div>
-      <div class="seal__core"><img src="assets/logo_mark.png" alt="" width="120" height="172" loading="lazy" decoding="async"></div>
+      <div class="seal__core"><img src="assets/logo_mark.webp" alt="" width="120" height="172" loading="lazy" decoding="async"></div>
     </div>
   </div>
 </section>
@@ -275,7 +275,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
   <div class="about__inner">
     <div class="about__visual reveal">
       <picture>
-        <source type="image/webp" srcset="assets/ana_03.webp">
+        <source type="image/webp" srcset="assets/ana_03_sm.webp 900w, assets/ana_03.webp 1400w" sizes="(max-width: 600px) 100vw, 50vw">
         <img src="assets/ana_03.png" alt="Dra. Ana Laura em sessão de fotos" width="1200" height="1306" loading="lazy" decoding="async">
       </picture>
       <div class="about__visual-caption">
@@ -350,7 +350,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
           <div class="seal__ring">
             <svg viewBox="0 0 68 68"><defs><path id="msRing" d="M 34,34 m -26,0 a 26,26 0 1,1 52,0 a 26,26 0 1,1 -52,0"/></defs><text font-family="Jost, sans-serif" font-size="5" letter-spacing="1.8" fill="currentColor" font-weight="500"><textPath href="#msRing" startOffset="0">DRA. ANA LAURA · PSIQUIATRIA · </textPath></text></svg>
           </div>
-          <div class="seal__core" style="width:48%;height:48%;"><img src="assets/logo_mark.png" alt="" width="32" height="46" loading="lazy" decoding="async" style="filter:brightness(0) invert(1);opacity:.92;"></div>
+          <div class="seal__core" style="width:48%;height:48%;"><img src="assets/logo_mark.webp" alt="" width="32" height="46" loading="lazy" decoding="async" style="filter:brightness(0) invert(1);opacity:.92;"></div>
         </div>
         <div>
           <div class="manifesto__sig-text">Ana Laura</div>
@@ -371,7 +371,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
       </svg>
     </div>
     <div class="seal__halo"></div>
-    <div class="seal__core"><img src="assets/logo_mark.png" alt="" width="160" height="229" loading="lazy" decoding="async"></div>
+    <div class="seal__core"><img src="assets/logo_mark.webp" alt="" width="160" height="229" loading="lazy" decoding="async"></div>
   </div>
   <div class="values__inner">
     <div class="values__head reveal">
@@ -666,7 +666,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
 <section class="praise" id="depoimentos">
   <!-- Decorative monogram watermark -->
   <div class="praise__monogram" aria-hidden="true">
-    <img src="assets/logo_mark.png" alt="" width="500" height="716" loading="lazy" decoding="async">
+    <img src="assets/logo_mark.webp" alt="" width="500" height="716" loading="lazy" decoding="async">
   </div>
 
   <!-- Decorative corner seals -->
@@ -917,7 +917,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
       </svg>
     </div>
     <div class="seal__halo"></div>
-    <div class="seal__core"><img src="assets/logo_mark.png" alt="" width="260" height="372" loading="lazy" decoding="async"></div>
+    <div class="seal__core"><img src="assets/logo_mark.webp" alt="" width="260" height="372" loading="lazy" decoding="async"></div>
   </div>
   <div class="cta__inner">
     <div class="cta__left reveal">
@@ -1058,7 +1058,7 @@ p,.body{font-family:var(--font-sans);font-size:var(--fs-body);line-height:var(--
     <div class="footer__main">
       <div>
         <div class="footer__brand">
-          <img src="assets/logo_mark.png" alt="" class="footer__brand-mark" width="42" height="60" loading="lazy" decoding="async">
+          <img src="assets/logo_mark.webp" alt="" class="footer__brand-mark" width="42" height="60" loading="lazy" decoding="async">
           <div>
             <div class="footer__brand-name">Dra. Ana Laura</div>
             <div class="footer__brand-tag">Psiquiatria · Sa&uacute;de mental</div>
