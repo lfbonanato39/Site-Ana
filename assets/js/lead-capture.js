@@ -305,6 +305,11 @@ document.querySelectorAll('a[href*="wa.me"]').forEach((a) => {
     const buttonLocation = getButtonLocation(a);
     const flow = a.hasAttribute('data-wa-direct') ? 'direct' : 'modal';
     track('whatsapp_click', { source: sectionId, label, button_location: buttonLocation, flow });
+    // Entrega 2: para [data-wa-direct] a conversion Ads é disparada no SUBMIT
+    // do mini-landing (assets/js/mini-landing.js), não mais aqui — pra contar
+    // 1 conversão por pessoa que efetivamente forneceu telefone. Links sem
+    // data-wa-direct (exit-intent, pre-form) seguem disparando aqui normalmente.
+    if (a.hasAttribute('data-wa-direct')) return;
     conversion('tANcCOfHnaQcEKLjlsND', 15); // WhatsApp Click — R$ 15 proxy value
   });
 });
