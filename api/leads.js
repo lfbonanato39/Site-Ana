@@ -121,7 +121,18 @@ module.exports = async function handler(req, res) {
   const session_id      = clean(body.session_id, 100);
   const button_location = clean(body.button_location, 80);
 
+  // Whitelist de flow_type: só aceita os valores documentados. Qualquer outro
+  // (inclusive vazio/null/payload arbitrário) cai no default 'pre_form'.
+  // - 'pre_form'    → submit do modal grande de qualificação
+  // - 'exit_intent' → submit do popup de saída
+  const rawFlowType = clean(body.flow_type, 40);
+  const flow_type   = rawFlowType === 'exit_intent' ? 'exit_intent' : 'pre_form';
+  const intentNotes = flow_type === 'exit_intent' ? 'exit_intent qualificado' : 'pre_form qualificado';
+
   // 6) Insert leads (primeiro, return=representation pra pegar o id)
+  //    source='pre_form' independente do flow_type — enum lead_source não tem
+  //    'exit_intent'. Diferenciação fica via coluna flow_type. Documentado no
+  //    commit message (Entrega 2.3).
   const leadRow = {
     phone:         phone,
     name:          name,
@@ -129,7 +140,7 @@ module.exports = async function handler(req, res) {
     symptom_area:  symptom_area,
     gclid:         gclid,
     source:        'pre_form',
-    flow_type:     'pre_form',
+    flow_type:     flow_type,
     is_qualified:  true
   };
 
@@ -154,9 +165,9 @@ module.exports = async function handler(req, res) {
     phone:                 phone,
     gclid:                 gclid,
     session_id:            session_id,
-    flow_type:             'pre_form',
+    flow_type:             flow_type,
     button_location:       button_location,
-    notes:                 'pre_form qualificado',
+    notes:                 intentNotes,
     converted_to_lead_id:  lead_id
   };
 

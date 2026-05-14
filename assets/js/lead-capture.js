@@ -739,6 +739,32 @@ setTimeout(() => track('engaged_30s'), 30000);
       ...utms
     });
 
+    // Entrega 2.3: paralelo ao Sheets, POST /api/leads com flow_type='exit_intent'.
+    // Mesmo padrão fire-and-forget keepalive do pre-form (Entrega 2.2). Se falhar,
+    // Sheets continua sendo source of truth. Exit-intent não captura email nem
+    // symptom_area — ficam null no backend.
+    try {
+      const __sessionId = (function(){
+        try { return sessionStorage.getItem('tracking_session_id') || null; }
+        catch(e) { return null; }
+      })();
+      fetch('/api/leads', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: phone,
+          name: name,
+          email: null,
+          symptom_area: null,
+          gclid: utms.gclid || null,
+          session_id: __sessionId,
+          button_location: 'exit_intent',
+          flow_type: 'exit_intent'
+        })
+      }).catch(function(){ /* fail silent — Sheets fallback */ });
+    } catch (e) { /* fail silent */ }
+
     track('exit_intent_submit', { button_location: 'exit_intent' });
     track('preform_qualified_lead', {
       has_name: !!name, has_email: false, has_phone: true,
