@@ -31,3 +31,8 @@ Desktop.ini
 *.bak
 *.log
 ~$*
+
+# --- Segredos / configuração local ---
+.env
+.env.local
+.env.*.local
