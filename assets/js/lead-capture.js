@@ -541,6 +541,31 @@ setTimeout(() => track('engaged_30s'), 30000);
     };
     const persisted = sendToSheets(data);
 
+    // Entrega 2.2: paralelo ao Sheets, POST pra /api/leads (Vercel function
+    // server-side com SUPABASE_SERVICE_ROLE_KEY). Fire-and-forget keepalive
+    // — não bloqueia o redirect pro WhatsApp. Se falhar, Sheets continua
+    // sendo source of truth e o usuário não percebe.
+    try {
+      const __sessionId = (function(){
+        try { return sessionStorage.getItem('tracking_session_id') || null; }
+        catch(e) { return null; }
+      })();
+      fetch('/api/leads', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: phone,
+          name: name,
+          email: email,
+          symptom_area: reason || null,
+          gclid: utms.gclid || null,
+          session_id: __sessionId,
+          button_location: lastButtonLocation
+        })
+      }).catch(function(){ /* fail silent — Sheets fallback */ });
+    } catch (e) { /* fail silent */ }
+
     track('preform_qualified_lead', {
       has_name: !!name, has_email: !!email, has_phone: !!phone,
       reason: reason || 'unspecified',
