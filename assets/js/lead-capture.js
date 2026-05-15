@@ -305,6 +305,11 @@ document.querySelectorAll('a[href*="wa.me"]').forEach((a) => {
     const buttonLocation = getButtonLocation(a);
     const flow = a.hasAttribute('data-wa-direct') ? 'direct' : 'modal';
     track('whatsapp_click', { source: sectionId, label, button_location: buttonLocation, flow });
+    // Entrega 2: para [data-wa-direct] a conversion Ads é disparada no SUBMIT
+    // do mini-landing (assets/js/mini-landing.js), não mais aqui — pra contar
+    // 1 conversão por pessoa que efetivamente forneceu telefone. Links sem
+    // data-wa-direct (exit-intent, pre-form) seguem disparando aqui normalmente.
+    if (a.hasAttribute('data-wa-direct')) return;
     conversion('tANcCOfHnaQcEKLjlsND', 15); // WhatsApp Click — R$ 15 proxy value
   });
 });
@@ -536,11 +541,41 @@ setTimeout(() => track('engaged_30s'), 30000);
     };
     const persisted = sendToSheets(data);
 
-    track('preform_qualified_lead', {
-      has_name: !!name, has_email: !!email, has_phone: !!phone,
-      reason: reason || 'unspecified',
-      note_len: note.length,
-      button_location: lastButtonLocation
+    // Entrega 2.2: paralelo ao Sheets, POST pra /api/leads (Vercel function
+    // server-side com SUPABASE_SERVICE_ROLE_KEY). Fire-and-forget keepalive
+    // — não bloqueia o redirect pro WhatsApp. Se falhar, Sheets continua
+    // sendo source of truth e o usuário não percebe.
+    try {
+      const __sessionId = (function(){
+        try { return sessionStorage.getItem('tracking_session_id') || null; }
+        catch(e) { return null; }
+      })();
+      fetch('/api/leads', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: phone,
+          name: name,
+          email: email,
+          symptom_area: reason || null,
+          gclid: utms.gclid || null,
+          session_id: __sessionId,
+          button_location: lastButtonLocation
+        })
+      }).catch(function(){ /* fail silent — Sheets fallback */ });
+    } catch (e) { /* fail silent */ }
+
+    // GA4 Caminho A: evento unificado 'qualified_lead' (substitui o antigo
+    // 'preform_qualified_lead'). Diferenciação entre fluxos via flow_type.
+    track('qualified_lead', {
+      flow_type:       'pre_form',
+      has_name:        !!name,
+      has_email:       !!email,
+      has_phone:       !!phone,
+      has_symptom:     !!reason,
+      button_location: lastButtonLocation,
+      reason:          reason || null
     });
     conversion('bSbqCOTHnaQcEKLjlsND', 50, { email, phone });
 
@@ -709,11 +744,43 @@ setTimeout(() => track('engaged_30s'), 30000);
       ...utms
     });
 
-    track('exit_intent_submit', { button_location: 'exit_intent' });
-    track('preform_qualified_lead', {
-      has_name: !!name, has_email: false, has_phone: true,
-      reason: 'exit_intent', note_len: 0,
-      button_location: 'exit_intent'
+    // Entrega 2.3: paralelo ao Sheets, POST /api/leads com flow_type='exit_intent'.
+    // Mesmo padrão fire-and-forget keepalive do pre-form (Entrega 2.2). Se falhar,
+    // Sheets continua sendo source of truth. Exit-intent não captura email nem
+    // symptom_area — ficam null no backend.
+    try {
+      const __sessionId = (function(){
+        try { return sessionStorage.getItem('tracking_session_id') || null; }
+        catch(e) { return null; }
+      })();
+      fetch('/api/leads', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: phone,
+          name: name,
+          email: null,
+          symptom_area: null,
+          gclid: utms.gclid || null,
+          session_id: __sessionId,
+          button_location: 'exit_intent',
+          flow_type: 'exit_intent'
+        })
+      }).catch(function(){ /* fail silent — Sheets fallback */ });
+    } catch (e) { /* fail silent */ }
+
+    // GA4 Caminho A: evento unificado 'qualified_lead'. Substitui as duas
+    // chamadas antigas ('exit_intent_submit' + 'preform_qualified_lead' com
+    // reason='exit_intent'), eliminando dupla contagem no relatório.
+    track('qualified_lead', {
+      flow_type:       'exit_intent',
+      has_name:        !!name,
+      has_email:       false,
+      has_phone:       true,
+      has_symptom:     false,
+      button_location: 'exit_intent',
+      reason:          null
     });
     conversion('bSbqCOTHnaQcEKLjlsND', 50, { phone });
 

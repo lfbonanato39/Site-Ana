@@ -2826,3 +2826,142 @@ button.faq__q::-moz-focus-inner { border: 0; }
   .btn, .wa-whisper { border: 1px solid #000; }
   section { page-break-inside: avoid; }
 }
+
+/* =========================================================================
+   Mini-landing modal — Entrega 2 (Supabase whatsapp_intents capture)
+   Modal criado dinamicamente por assets/js/mini-landing.js
+   Reusa CSS variables do design system; padrão BEM .mini-wa__*
+   ========================================================================= */
+.mini-wa {
+  position: fixed; inset: 0; z-index: 10000;
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.mini-wa.is-open { display: flex; }
+.mini-wa[hidden] { display: none !important; }
+.mini-wa.is-open[hidden] { display: flex !important; }
+.mini-wa__overlay {
+  position: absolute; inset: 0;
+  background: rgba(33, 46, 81, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.mini-wa__dialog {
+  position: relative;
+  width: 100%; max-width: 460px;
+  background: var(--ivory-100);
+  border-radius: 12px;
+  box-shadow: var(--shadow-3);
+  padding: 48px 36px 36px;
+  font-family: var(--font-sans);
+  color: var(--fg-1);
+  animation: miniWaIn 320ms var(--ease-out);
+}
+@keyframes miniWaIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.mini-wa__close {
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 24px; line-height: 1;
+  color: var(--fg-3);
+  border-radius: 6px;
+  transition: background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.mini-wa__close:hover { background: rgba(33, 46, 81, 0.06); color: var(--fg-1); }
+.mini-wa__close:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.mini-wa__title {
+  font-family: var(--font-serif);
+  font-size: 26px; line-height: 1.2;
+  font-weight: 500;
+  color: var(--navy-800);
+  margin: 0 0 12px;
+  letter-spacing: -0.005em;
+}
+.mini-wa__subtitle {
+  font-family: var(--font-sans);
+  font-size: 15px; line-height: 1.5;
+  color: var(--fg-2);
+  margin: 0 0 28px;
+  font-weight: 300;
+}
+.mini-wa__form { display: flex; flex-direction: column; gap: 20px; }
+.mini-wa__field { display: flex; flex-direction: column; gap: 8px; }
+.mini-wa__label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--champagne-700);
+}
+.mini-wa__field input {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  color: var(--fg-1);
+  outline: none;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+.mini-wa__field input::placeholder { color: var(--fg-3); font-weight: 300; }
+.mini-wa__field input:focus {
+  border-color: var(--champagne-500);
+  box-shadow: var(--shadow-focus);
+}
+.mini-wa__field.has-error input { border-color: #c0392b; }
+.mini-wa__error {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #c0392b;
+  display: none;
+}
+.mini-wa__field.has-error .mini-wa__error { display: block; }
+.mini-wa__submit {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  padding: 14px 24px;
+  background: var(--navy-800);
+  color: var(--ivory-100);
+  border: none; border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  transition: background var(--dur-fast) var(--ease-out),
+              transform 120ms var(--ease-out);
+}
+.mini-wa__submit:hover { background: var(--navy-900); transform: translateY(-1px); }
+.mini-wa__submit:active { transform: translateY(0); }
+.mini-wa__submit:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.mini-wa__submit .arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.mini-wa__submit:hover .arrow { transform: translateX(3px); }
+
+@media (max-width: 600px) {
+  .mini-wa { padding: 16px; }
+  .mini-wa__dialog { padding: 40px 24px 24px; max-width: 100%; }
+  .mini-wa__title { font-size: 22px; }
+  .mini-wa__subtitle { font-size: 14px; margin-bottom: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mini-wa__dialog { animation: none; }
+  .mini-wa__submit,
+  .mini-wa__submit .arrow,
+  .mini-wa__close,
+  .mini-wa__field input { transition: none; }
+}
+@media print {
+  .mini-wa { display: none !important; }
+}
