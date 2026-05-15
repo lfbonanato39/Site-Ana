@@ -566,11 +566,16 @@ setTimeout(() => track('engaged_30s'), 30000);
       }).catch(function(){ /* fail silent — Sheets fallback */ });
     } catch (e) { /* fail silent */ }
 
-    track('preform_qualified_lead', {
-      has_name: !!name, has_email: !!email, has_phone: !!phone,
-      reason: reason || 'unspecified',
-      note_len: note.length,
-      button_location: lastButtonLocation
+    // GA4 Caminho A: evento unificado 'qualified_lead' (substitui o antigo
+    // 'preform_qualified_lead'). Diferenciação entre fluxos via flow_type.
+    track('qualified_lead', {
+      flow_type:       'pre_form',
+      has_name:        !!name,
+      has_email:       !!email,
+      has_phone:       !!phone,
+      has_symptom:     !!reason,
+      button_location: lastButtonLocation,
+      reason:          reason || null
     });
     conversion('bSbqCOTHnaQcEKLjlsND', 50, { email, phone });
 
@@ -765,11 +770,17 @@ setTimeout(() => track('engaged_30s'), 30000);
       }).catch(function(){ /* fail silent — Sheets fallback */ });
     } catch (e) { /* fail silent */ }
 
-    track('exit_intent_submit', { button_location: 'exit_intent' });
-    track('preform_qualified_lead', {
-      has_name: !!name, has_email: false, has_phone: true,
-      reason: 'exit_intent', note_len: 0,
-      button_location: 'exit_intent'
+    // GA4 Caminho A: evento unificado 'qualified_lead'. Substitui as duas
+    // chamadas antigas ('exit_intent_submit' + 'preform_qualified_lead' com
+    // reason='exit_intent'), eliminando dupla contagem no relatório.
+    track('qualified_lead', {
+      flow_type:       'exit_intent',
+      has_name:        !!name,
+      has_email:       false,
+      has_phone:       true,
+      has_symptom:     false,
+      button_location: 'exit_intent',
+      reason:          null
     });
     conversion('bSbqCOTHnaQcEKLjlsND', 50, { phone });
 

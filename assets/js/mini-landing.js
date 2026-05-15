@@ -298,11 +298,26 @@
         click_id:        null
       });
 
-      // 2. GA4 event
+      // 2. GA4 events
+      //    'whatsapp_intent' — semântica "demonstrou intenção" (mantido)
+      //    'qualified_lead'  — GA4 Caminho A: evento unificado entre os 3 fluxos
+      //                        (mini_landing | pre_form | exit_intent), permite
+      //                        comparar conversões qualificadas com flow_type
+      //                        como dimensão. has_name/has_email/has_symptom são
+      //                        false aqui — mini-landing só capta telefone.
       fireGA4('whatsapp_intent', {
         button_location: lastButtonLocation,
         flow_type:       'mini_landing',
         has_gclid:       !!trackingParams.gclid
+      });
+      fireGA4('qualified_lead', {
+        flow_type:       'mini_landing',
+        has_name:        false,
+        has_email:       false,
+        has_phone:       true,
+        has_symptom:     false,
+        button_location: lastButtonLocation,
+        reason:          null
       });
 
       // 3. Ads conversion (Enhanced Conversions via lead-capture.js se disponível)

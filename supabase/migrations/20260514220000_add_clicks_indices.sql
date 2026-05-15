@@ -1,0 +1,71 @@
+-- =========================================================================
+-- Migration: reconcile and add indices on clicks(session_id, gclid)
+-- Date:      2026-05-14
+-- Entrega:   Problema B + GA4 Caminho A
+-- Author:    Luiz Felipe (com Claude Opus 4.7)
+-- =========================================================================
+--
+-- CONTEXT
+-- -------
+-- /api/leads now performs an attribution step (Problema B) after creating
+-- the lead and the whatsapp_intent: it looks up the most recent click for
+-- the user, by session_id first (last-click attribution per session) and
+-- by gclid as fallback. The result populates lead.click_id, lead.whatsapp_intent_id
+-- and lead.campaign_attributed.
+--
+-- Both lookup queries filter by columns that need indices:
+--   SELECT id, utm_campaign FROM clicks WHERE session_id = $1 ORDER BY created_at DESC LIMIT 1;
+--   SELECT id, utm_campaign FROM clicks WHERE gclid       = $1 ORDER BY created_at DESC LIMIT 1;
+--
+-- Without an index, query time is O(n) sequential scan — fine while clicks
+-- has hundreds of rows, painful at hundreds of thousands. Each /api/leads
+-- call performs up to 2 of these lookups synchronously before responding,
+-- so the cost is in the critical path.
+--
+-- WHAT THIS MIGRATION DOES
+-- ------------------------
+-- 1) DROP idx_clicks_session (redundant). An older index with the same
+--    definition btree(session_id) already existed under the name
+--    idx_clicks_session — drift between the database and the repo. We drop
+--    it and consolidate under the canonical name idx_clicks_session_id,
+--    matching the naming convention of idx_clicks_gclid.
+--
+-- 2) CREATE idx_clicks_session_id on (session_id) — canonical name.
+--
+-- 3) CREATE idx_clicks_gclid on (gclid). IF NOT EXISTS is idempotent, so
+--    if a partial-index version already exists in the database (e.g.
+--    `WHERE (gclid IS NOT NULL)` created out-of-band before this migration
+--    was written), this CREATE is a no-op and the partial-index is kept.
+--
+-- All CREATE/DROP use IF EXISTS / IF NOT EXISTS — migration is idempotent
+-- and safe to re-run. CONCURRENTLY is not used because the table is
+-- currently small and ACCESS EXCLUSIVE lock duration is sub-second; if the
+-- table grows large in the future, prefer CREATE INDEX CONCURRENTLY in
+-- subsequent migrations.
+--
+-- APPLIED MANUALLY (2026-05-14)
+-- -----------------------------
+-- - Both CREATE INDEX statements were applied first; only after did Luiz
+--   discover idx_clicks_session as a leftover duplicate.
+-- - The DROP statement below is the reconciliation step, applied manually
+--   in SQL Editor right after this file was finalised. From this commit
+--   onward, repo and database are aligned.
+--
+-- ROLLBACK (if needed)
+-- --------------------
+-- BEGIN;
+--   DROP INDEX IF EXISTS public.idx_clicks_session_id;
+--   DROP INDEX IF EXISTS public.idx_clicks_gclid;
+--   CREATE INDEX IF NOT EXISTS idx_clicks_session ON public.clicks (session_id);
+-- COMMIT;
+-- =========================================================================
+
+-- 1) Drop redundante: idx_clicks_session já existia em btree(session_id),
+--    substituído pelo nome canônico idx_clicks_session_id pra consistência
+--    com idx_clicks_gclid.
+DROP INDEX IF EXISTS public.idx_clicks_session;
+
+-- 2) Índices canônicos (B-tree, sem partial clause aqui — se já existir
+--    versão parcial no banco, IF NOT EXISTS preserva ela).
+CREATE INDEX IF NOT EXISTS idx_clicks_session_id ON public.clicks (session_id);
+CREATE INDEX IF NOT EXISTS idx_clicks_gclid      ON public.clicks (gclid);

@@ -74,6 +74,86 @@ async function insertRow(table, row, prefer) {
   });
 }
 
+// Lookup do click que originou o lead. Estratégia last-click:
+//   1) por session_id (mesma aba/jornada) — preferencial
+//   2) por gclid (fallback se session_id não disponível ou query vazia)
+// Retorna { id, utm_campaign } ou null. Nunca lança.
+async function findClickForLead(sessionId, gclid) {
+  const headers = {
+    'apikey': SUPABASE_SERVICE_ROLE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_SERVICE_ROLE_KEY,
+    'Accept': 'application/json'
+  };
+
+  async function queryBy(column, value) {
+    if (!value) return null;
+    try {
+      const url = SUPABASE_URL + '/rest/v1/clicks'
+        + '?' + column + '=eq.' + encodeURIComponent(value)
+        + '&order=created_at.desc&limit=1&select=id,utm_campaign';
+      const resp = await fetch(url, { headers: headers });
+      if (!resp.ok) {
+        const errBody = await resp.text().catch(function () { return ''; });
+        console.error('[api/leads] click lookup by ' + column + ' failed', resp.status, errBody);
+        return null;
+      }
+      const rows = await resp.json().catch(function () { return null; });
+      return Array.isArray(rows) && rows[0] ? rows[0] : null;
+    } catch (e) {
+      console.error('[api/leads] click lookup by ' + column + ' threw', e && e.message);
+      return null;
+    }
+  }
+
+  // 1) session_id (preferencial)
+  let hit = await queryBy('session_id', sessionId);
+  if (hit) return hit;
+  // 2) gclid (fallback)
+  hit = await queryBy('gclid', gclid);
+  return hit;
+}
+
+// PATCH em leads com campos de atribuição. Omite chaves NULL — assim,
+// click_id=NULL no banco mantém o significado "click não encontrado", e
+// click_id NOT NULL + campaign_attributed=NULL significa "click encontrado
+// mas era organic/direct (sem utm_campaign)".
+async function updateLeadAttribution(leadId, click, intentId) {
+  const patch = {};
+  if (click && click.id) {
+    patch.click_id = click.id;
+    if (click.utm_campaign) {
+      patch.campaign_attributed = click.utm_campaign;
+    }
+  }
+  if (intentId) {
+    patch.whatsapp_intent_id = intentId;
+  }
+  if (Object.keys(patch).length === 0) return false;
+
+  try {
+    const url = SUPABASE_URL + '/rest/v1/leads?id=eq.' + encodeURIComponent(leadId);
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_SERVICE_ROLE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(patch)
+    });
+    if (!resp.ok) {
+      const errBody = await resp.text().catch(function () { return ''; });
+      console.error('[api/leads] lead attribution PATCH failed', resp.status, errBody);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('[api/leads] lead attribution PATCH threw', e && e.message);
+    return false;
+  }
+}
+
 // ----- Handler -----------------------------------------------------------
 
 module.exports = async function handler(req, res) {
@@ -171,16 +251,39 @@ module.exports = async function handler(req, res) {
     converted_to_lead_id:  lead_id
   };
 
+  let intent_id = null;
   try {
-    const intentResp = await insertRow('whatsapp_intents', intentRow, 'return=minimal');
+    // return=representation pra capturar intent.id (necessário pro PATCH
+    // de atribuição abaixo — linkagem bidirecional B2).
+    const intentResp = await insertRow('whatsapp_intents', intentRow, 'return=representation');
     if (!intentResp.ok) {
       const errBody = await intentResp.text().catch(function () { return ''; });
       console.error('[api/leads] whatsapp_intents insert failed', intentResp.status, errBody);
       return res.status(200).json({ ok: true, lead_id: lead_id, warning: 'intent_failed' });
     }
+    const intentData = await intentResp.json().catch(function () { return null; });
+    intent_id = Array.isArray(intentData) && intentData[0] ? intentData[0].id : null;
   } catch (e) {
     console.error('[api/leads] whatsapp_intents insert threw', e && e.message);
     return res.status(200).json({ ok: true, lead_id: lead_id, warning: 'intent_threw' });
+  }
+
+  // 8) Atribuição: lookup do click + PATCH no lead (Problema B)
+  //    Executado ANTES do return — Vercel cancela promises pós-res.json()
+  //    sem waitUntil(), e atribuição precisa ser confiável. +50-100ms de
+  //    latência server-side é invisível pro frontend (que dispara fetch
+  //    fire-and-forget e abre wa.me via setTimeout 60ms).
+  //    Best-effort: se qualquer parte falhar, lead já está persistido com
+  //    seus dados core. Atribuição vira NULL nos campos relevantes.
+  try {
+    const click = await findClickForLead(session_id, gclid);
+    if (!click && gclid) {
+      console.warn('[api/leads] click not found for lead', lead_id, 'gclid_prefix:', gclid.slice(0, 12));
+    }
+    await updateLeadAttribution(lead_id, click, intent_id);
+  } catch (e) {
+    console.error('[api/leads] attribution step threw', e && e.message);
+    // não bloqueia o sucesso do lead — atribuição é best-effort
   }
 
   return res.status(200).json({ ok: true, lead_id: lead_id });
