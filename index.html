@@ -85,6 +85,12 @@
   gtag('js', new Date());
   gtag('config', 'G-V80CXY51QP', { send_page_view: true, anonymize_ip: true });
   gtag('config', 'AW-18126057890');
+  // TEMPORÁRIO — registra conta Ads legada AW-18068581578 pro disparo paralelo
+  // de conversões funcionar (ver bloco LEGACY_LABEL_MAP em assets/js/lead-capture.js).
+  // Sem este config, gtag descarta silenciosamente eventos com send_to apontando
+  // pra essa propriedade. Reverter junto com o bloco LEGACY quando o Tag Assistant
+  // da conta ativa estiver detectando 100% sem precisar da legada.
+  gtag('config', 'AW-18068581578');
 </script>
 
 <!-- Google Tag GT-WP4R3RQS ("TAG ADS 157") — restaura entrega de eventos
