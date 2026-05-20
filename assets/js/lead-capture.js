@@ -47,6 +47,32 @@ async function conversion(label, value = 0, userData) {
     payload.user_data = ud;
   }
   gtag('event', 'conversion', payload);
+
+  // ========== TEMPORÁRIO — Dual conversion tracking ==========
+  // Disparo paralelo idêntico pra conta Ads legada AW-18068581578.
+  // Motivo: Tag Assistant da conta ATIVA (AW-18126057890) não detecta
+  // as conversões corretamente quando o diagnóstico é feito pela conta
+  // legada (que tem ações de conversão duplicadas/herdadas). Conta
+  // legada está vazia (sem campanhas ativas), então o disparo paralelo
+  // não tem efeito colateral em billing/atribuição.
+  //
+  // Reverter este bloco quando o Tag Assistant da conta ativa estiver
+  // detectando 100% dos eventos. Ver PR fix/dual-conversion-tracking.
+  //
+  // Mapping label_ativa → label_legada (mesmas 3 ações):
+  //   tANcCOfHnaQcEKLjlsND (WhatsApp Click, R$15) → se8dCOzk66QcEMrZ4qdD
+  //   pwkGCOrHnaQcEKLjlsND (Email Click,    R$5)  → VG8oCMOe7KQcEMrZ4qdD
+  //   bSbqCOTHnaQcEKLjlsND (Qualified Lead, R$50) → 2J12CJD2hKUcEMrZ4qdD
+  const LEGACY_LABEL_MAP = {
+    'tANcCOfHnaQcEKLjlsND': 'se8dCOzk66QcEMrZ4qdD',
+    'pwkGCOrHnaQcEKLjlsND': 'VG8oCMOe7KQcEMrZ4qdD',
+    'bSbqCOTHnaQcEKLjlsND': '2J12CJD2hKUcEMrZ4qdD'
+  };
+  const legacyLabel = LEGACY_LABEL_MAP[label];
+  if (legacyLabel) {
+    gtag('event', 'conversion', { ...payload, send_to: 'AW-18068581578/' + legacyLabel });
+  }
+  // ========== /TEMPORÁRIO ==========
 }
 
 function getButtonLocation(el) {

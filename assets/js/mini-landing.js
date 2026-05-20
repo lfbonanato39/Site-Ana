@@ -36,6 +36,11 @@
   // Identificadores Ads/GA4 — mesmos usados em lead-capture.js
   var ADS_CONVERSION_LABEL = 'tANcCOfHnaQcEKLjlsND'; // WhatsApp Click
   var ADS_CONVERSION_VALUE = 15;                     // R$ 15 proxy value
+  // TEMPORÁRIO — dual conversion tracking pra conta legada AW-18068581578.
+  // Só usado no fallback abaixo (quando window.conversion do lead-capture.js
+  // não está disponível). O caminho preferencial já dispara as 2 contas via
+  // o helper conversion() — ver bloco LEGACY_LABEL_MAP em lead-capture.js.
+  var ADS_CONVERSION_LABEL_LEGACY = 'se8dCOzk66QcEMrZ4qdD'; // WhatsApp Click (AW-18068581578)
 
   // Número de fallback se o botão clicado não tiver href (extremo improvável)
   var WA_FALLBACK = 'https://wa.me/5531971546161';
@@ -107,6 +112,13 @@
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', {
           send_to: 'AW-18126057890/' + ADS_CONVERSION_LABEL,
+          value: ADS_CONVERSION_VALUE,
+          currency: 'BRL'
+        });
+        // TEMPORÁRIO — disparo paralelo pra conta legada AW-18068581578.
+        // Ver contexto no helper conversion() de lead-capture.js.
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-18068581578/' + ADS_CONVERSION_LABEL_LEGACY,
           value: ADS_CONVERSION_VALUE,
           currency: 'BRL'
         });
